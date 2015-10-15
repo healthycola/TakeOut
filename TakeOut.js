@@ -1,0 +1,72 @@
+if (Meteor.isClient) {
+  // counter starts at 0
+  Session.setDefault('counter', 0);
+
+  Template.hello.helpers({
+    counter: function () {
+      console.log(Meteor.users);
+      return Session.get('counter');
+    }
+  });
+
+  Template.hello.events({
+    'click button': function () {
+      // increment the counter when button is clicked
+      Session.set('counter', Session.get('counter') + 1);
+    }
+  });
+  
+  Template.signupForm.events({
+    "submit #signup-form": function(event) {
+      event.preventDefault();
+      Accounts.createUser({
+        username: event.target.signupusername.value,
+        password: event.target.signuppassword.value,
+        profile: {
+          name: event.target.signupname.value,
+          accountType: event.target.accountType.value,
+          itemsDonated: 0,
+          itemsPickedUp: 0
+        }
+      }, function(error) {
+        if (error) {
+          // Display the user creation error to the user however you want
+        }
+      });
+    }
+  });
+  
+  Template.loginForm.events({
+    "submit #login-form": function(event) {
+      event.preventDefault();
+      console.log(event);
+      console.log("Test - " + event.target.loginusername.value);
+      Meteor.loginWithPassword(
+        event.target.loginusername.value,
+        event.target.loginpassword.value,
+        function(error) {
+          if (error) {
+            // Display the login error to the user however you want
+          }
+        }
+      );
+    }
+  });
+  
+  Template.logoutForm.events({
+    "submit #logout-form": function(event) {
+      event.preventDefault();
+      Meteor.logout(function(error) {
+        if (error) {
+          // Display the logout error to the user however you want
+        }
+      });
+    }
+  });
+}
+
+if (Meteor.isServer) {
+  Meteor.startup(function () {
+    // code to run on server at startup
+  });
+}

@@ -1,0 +1,70 @@
+<head>
+  <title>TakeOut</title>
+</head>
+
+<body>
+  <h1>Welcome to TakeOut!</h1>
+
+  {{> hello}}
+  
+  {{#if currentUser}}
+  Username: {{currentUser.username}}<br/>
+  Name: {{currentUser.profile.name}}<br/>
+  Account Type: {{currentUser.profile.accountType}}<br/>
+  {{> logoutForm}}
+  {{else}}
+  {{> signupForm}}
+  {{> loginForm}}
+  {{/if}}
+  
+</body>
+
+<template name="hello">
+  <button>Click Me</button>
+  <p>You've pressed the button {{counter}} times.</p>
+</template>
+
+<template name="signupForm">
+  <form id="signup-form">
+    <h2>Sign Up</h2>
+
+    <label for="signup-username">Username</label>
+    <input type="text" name="signupusername" placeholder="Username" />
+    
+    <select name="accountType">
+      <option value="Restaurant - Donor">Restaurant - Donor</option>
+      <option value="Grocery Store - Donor">Grocery Store - Donor</option>
+      <option value="Individual - Donor">Individual - Donor</option>
+      <option value="Individual - Consumer">Individual - Consumer</option>
+      <option value="Pickup Service - Consumer">Pickup Service - Consumer</option>
+    </select>
+
+    <label for="signup-password">Password</label>
+    <input type="password" name="signuppassword" placeholder="Password" />
+
+    <label for="signup-name">Full Name</label>
+    <input type="text" name="signupname" placeholder="Full Name" />
+
+    <button type="submit">Sign Up</button>
+  </form>
+</template>
+
+<template name="loginForm">
+  <form id="login-form">
+    <h2>Log In</h2>
+
+    <label for="login-username">Username</label>
+    <input type="text" name="loginusername" placeholder="Username" />
+
+    <label for="login-password">Password</label>
+    <input type="password" name="loginpassword" placeholder="Password" />
+
+    <button type="submit">Log In</button>
+  </form>
+</template>
+
+<template name="logoutForm">
+  <form id="logout-form">
+    <button type="submit">Log Out</button>
+  </form>
+</template>
