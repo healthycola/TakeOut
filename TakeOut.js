@@ -70,3 +70,11 @@ if (Meteor.isServer) {
     // code to run on server at startup
   });
 }
+
+Router.route('/', function () {
+  // render the Home template with a custom data context
+  this.render('signupstuff');
+});
+
+
+Router.route('/profile');
