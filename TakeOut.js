@@ -22,6 +22,18 @@ if (Meteor.isClient) {
     }
   });
 
+Template.email.events({
+    "click #emailAdd": function(event) {
+      event.preventDefault();
+
+      Meteor.call('sendEmail',
+            (Meteor.users.findOne({_id : this.ownerID})).emails[0].address,
+            Meteor.user().emails[0].address,
+            'Hello from Meteor!',
+            'This is a test of Email.send.');
+      }
+  });
+
   Template.signupForm.events({
     "submit #signup-form": function(event) {
       event.preventDefault();
@@ -78,6 +90,29 @@ if (Meteor.isServer) {
   Meteor.startup(function () {
     // code to run on server at startup
 
+    Meteor.methods({
+      sendEmail: function (to, from, subject, text) {
+
+        var options = {
+            apiKey: 'key-2912fabf1546af438ae9524bf8d71308',
+            domain: 'sandbox27eb015c13cb43198dc3d8526e3354b6.mailgun.org'
+        }
+
+        var NigerianPrinceGun = new Mailgun(options);
+        NigerianPrinceGun.send({
+         'to': to,
+         'from': from,
+         'html': '<html><head></head><body>'+text+'</body></html>',
+         'text': text,
+         'subject': subject,
+         'tags': [
+             'some',
+             'test',
+             'tags'
+         ]
+     });
+        }
+    });
   });
 }
 
@@ -100,7 +135,6 @@ Router.route('/profile', function () {
   // render the Home template with a custom data context
   this.render('profile');
 });
-
 
 Router.route('/feed', function () {
   this.layout('LayoutOne');

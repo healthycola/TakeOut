@@ -22,3 +22,5 @@ accounts-password
 iron:router
 twbs:bootstrap
 tsega:bootstrap3-datetimepicker
+email
+gfk:mailgun-api

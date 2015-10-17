@@ -20,5 +20,12 @@
 		<td>{{name}}</td>
 		<td>{{ageDay}} days {{ageHour}} hours</td>
 		<td>{{postedOn}}</td>
+    <td>{{> email}}</td>
 	</tr>
+</template>
+
+<template name="email">
+  <div class="col-sm-offset-2 col-sm-10">
+    <button id="emailAdd" class="btn btn-default">Email</button>
+  </div>
 </template>
