@@ -15,7 +15,7 @@ if (Meteor.isClient) {
       Session.set('counter', Session.get('counter') + 1);
     }
   });
-  
+
   Template.signupForm.events({
     "submit #signup-form": function(event) {
       event.preventDefault();
@@ -35,7 +35,7 @@ if (Meteor.isClient) {
       });
     }
   });
-  
+
   Template.loginForm.events({
     "submit #login-form": function(event) {
       event.preventDefault();
@@ -52,7 +52,7 @@ if (Meteor.isClient) {
       );
     }
   });
-  
+
   Template.logoutForm.events({
     "submit #logout-form": function(event) {
       event.preventDefault();
@@ -77,4 +77,11 @@ Router.route('/', function () {
 });
 
 
-Router.route('/profile');
+//Router.route('/profile');
+
+
+Router.route('/profile', function () {
+  // render the Home template with a custom data context
+  this.render('profile');
+
+});

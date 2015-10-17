@@ -1,3 +1,15 @@
-<template name="profile">
-  <h1>Profile Page</h1>
+<template name='profile'>
+  {{#if currentUser}}
+  Username: {{currentUser.username}}<br/>
+  Name: {{currentUser.profile.name}}<br/>
+  Account Type: {{currentUser.profile.accountType}}<br/>
+
+
+  {{else}}
+  {{> profileLoggedin}}
+  {{/if}}
+</template>
+
+<template name="profileLoggedin">
+  <h1>Profile Page22</h1>
 </template>
