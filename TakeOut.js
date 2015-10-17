@@ -83,5 +83,4 @@ Router.route('/', function () {
 Router.route('/profile', function () {
   // render the Home template with a custom data context
   this.render('profile');
-
 });
