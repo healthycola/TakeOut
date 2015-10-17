@@ -10,7 +10,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">TakeOut</a>
+      <a class="navbar-brand" href="/">TakeOut</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -25,14 +25,12 @@
             <ul class="dropdown-menu">
               <li><a href="/profile">Profile</a></li>
               <li role="separator" class="divider"></li>
-              <li><a href="#">{{> logoutFormSpan}}</a></li>
+              <li>{{> logoutForm}}</li>
               <li><a href="#">Contact Us</a></li>
             </ul>
           </li>
         {{else}}
-
-
-
+        <li><a href="/signup">Signup</a></li>
         {{/if}}
       </ul>
     </div><!-- /.navbar-collapse -->
