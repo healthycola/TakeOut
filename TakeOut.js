@@ -126,7 +126,7 @@ if (Meteor.isServer) {
 
 Router.route('/', function () {
   // render the Home template with a custom data context
-  this.layout('LayoutOne');
+  this.layout('LayoutTwo');
 
   this.render('homepage');
 });

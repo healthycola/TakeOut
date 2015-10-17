@@ -17,3 +17,20 @@
 		</div>
 	</div>
 </template>
+
+<template name="LayoutTwo">
+	{{> header}}
+	<div id="wrap2">
+		<div class="container2">
+			<article>
+				{{> yield}}
+			</article>
+		</div>
+	</div>
+
+	<div id="footer">
+		<div class="container">
+			<p class="text-muted">(c) Takeout</p>
+		</div>
+	</div>
+</template>
