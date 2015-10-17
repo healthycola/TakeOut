@@ -1,0 +1,28 @@
+<template name='feed'>
+  {{#if currentUser}}
+
+
+    Username: {{currentUser.username}}<br/>
+    Name: {{currentUser.profile.name}}<br/>
+    Account Type: {{currentUser.profile.accountType}}<br/>
+
+
+    <ul>
+      {{#each posts}}
+        {{> post}}
+      {{/each}}
+    </ul>
+
+  {{else}}
+
+    {{> signupForm}}
+    {{> loginForm}}
+  {{/if}}
+</template>
+
+
+<template name="post">
+
+  <li>{{text}}</li>
+
+</template>

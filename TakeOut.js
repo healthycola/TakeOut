@@ -9,6 +9,12 @@ if (Meteor.isClient) {
     }
   });
 
+  Template.feed.helpers({
+    posts: function () {
+        return Posts.find();
+      }
+  });
+
   Template.hello.events({
     'click button': function () {
       // increment the counter when button is clicked
@@ -68,20 +74,21 @@ if (Meteor.isClient) {
 if (Meteor.isServer) {
   Meteor.startup(function () {
     // code to run on server at startup
+
   });
 }
 
 Router.route('/', function () {
   // render the Home template with a custom data context
   this.layout('LayoutOne');
-  
+
   this.render('homepage');
 });
 
 Router.route('/signup', function () {
   // render the Home template with a custom data context
   this.layout('LayoutOne');
-  
+
   this.render('signupstuff');
 });
 
@@ -92,4 +99,10 @@ Router.route('/profile', function () {
   this.layout('LayoutOne');
   // render the Home template with a custom data context
   this.render('profile');
+});
+
+Router.route('/feed', function () {
+  this.layout('LayoutOne');
+  // render the Home template with a custom data context
+  this.render('feed');
 });
