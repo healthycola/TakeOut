@@ -5,10 +5,18 @@ if (Meteor.isClient) {
 		this.$('.datetimepicker').datetimepicker();
 	});
 
-	 Template.additem.events({
-    	'submit #additem': function(event) {
-
-		var insertedItem = Items.insert(
+  Session.setDefault('imageURL', '');
+  
+  Template.additem.helpers({
+    imageURL: function () {
+      return Session.get('imageURL');
+    }
+  });
+  
+  Template.additem.events({
+    'submit #additem': function(event) {
+  
+    var insertedItem = Items.insert(
         {
           name: event.target.name.value,
           ageDay: event.target.ageInDays.value,
@@ -17,11 +25,18 @@ if (Meteor.isClient) {
           ownerID: Meteor.userId(),
           postedOn: new Date(),
           pickupAfter: event.target.schedulingAfter.value,
-		      pickupBefore: event.target.schedulingBefore.value,
+          pickupBefore: event.target.schedulingBefore.value,
         });
-
-    	Router.go('ShowItems');
-		return false;
+  
+      Router.go('ShowItems');
+    return false;
+    },
+    
+    'change .filename': function (event) {
+      console.log(event);
+      // increment the counter when button is clicked
+      console.log(event.originalEvent.fpfile.url);
+      Session.set('imageURL', event.originalEvent.fpfile.url);
     }
   });
 
