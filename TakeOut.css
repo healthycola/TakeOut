@@ -42,6 +42,8 @@
 
 hr.colored {
     border-color: #ef4035;
+    height: 2px;
+    width: 200px;
 }
 
 
