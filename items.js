@@ -27,15 +27,13 @@ if (Meteor.isClient) {
           pickupAfter: event.target.schedulingAfter.value,
           pickupBefore: event.target.schedulingBefore.value,
         });
-  
+      
+      Session.set('imageURL', '');
       Router.go('ShowItems');
     return false;
     },
     
     'change .filename': function (event) {
-      console.log(event);
-      // increment the counter when button is clicked
-      console.log(event.originalEvent.fpfile.url);
       Session.set('imageURL', event.originalEvent.fpfile.url);
     }
   });
@@ -54,7 +52,6 @@ if (Meteor.isClient) {
 
   Template.item.events({
     	'click .itemClick': function(event) {
-        console.log(this);
         Router.go('/items/' + this._id);
     }
   });
