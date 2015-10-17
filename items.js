@@ -37,6 +37,28 @@ if (Meteor.isClient) {
       Session.set('imageURL', event.originalEvent.fpfile.url);
     }
   });
+  
+  Template.Request.onRendered(function() {
+    this.$('.datetimepicker').datetimepicker();
+  });
+
+  Template.Request.events({
+    'submit #requestItem': function(event) {
+      
+      console.log(Meteor.users.findOne({_id : this.item.ownerID}).profile.email);
+      Meteor.call('sendEmail',
+            (Meteor.users.findOne({_id : this.item.ownerID})).profile.email,
+            Meteor.user().profile.email,
+            'Request from TakeOut',
+            event.target.message.value + "<br/>" + event.target.schedulingRequest.value);
+            
+    return false;
+    },
+    
+    'change .filename': function (event) {
+      Session.set('imageURL', event.originalEvent.fpfile.url);
+    }
+  });
 
 	Template.ShowItems.helpers({
 		items: function () {
@@ -94,6 +116,31 @@ Router.route('/items/:_id', function () {
   else
   {
     this.render('ShowSingleItem', {data: {}});
+  }
+});
+
+
+Router.route('/request/:_id', function () {
+  this.layout('LayoutOne');
+  // render the Home template with a custom data context
+
+  var findResult = Items.findOne({_id: this.params._id});
+
+  if (findResult)
+  {
+    var ownerFindResult = Meteor.users.findOne({_id: findResult.ownerID});
+    if (ownerFindResult)
+    {
+      this.render('Request', {data: {item: findResult, owner: ownerFindResult}});
+    }
+    else
+    {
+      this.render('Request', {data: {}});
+    }
+  }
+  else
+  {
+    this.render('Request', {data: {}});
   }
 });
 

@@ -23,18 +23,12 @@ if (Meteor.isClient) {
   });
 
 Template.email.events({
-    "click #emailAdd": function(event) {
+  "click #emailAdd": function(event) {
       event.preventDefault();
 
       Router.go('/request/' + this._id);
       return false;
-
-      Meteor.call('sendEmail',
-            (Meteor.users.findOne({_id : this.ownerID})).emails[0].address,
-            Meteor.user().emails[0].address,
-            'Hello from Meteor!',
-            'This is a test of Email.send.');
-      }
+    }
   });
 
   Template.signupForm.events({
@@ -47,6 +41,7 @@ Template.email.events({
         profile: {
           firstName: event.target.signupFirstName.value,
           lastName: event.target.signupLastName.value,
+          email: event.target.signupEmail.value,
           accountType: event.target.accountType.value,
           itemsDonated: 0,
           itemsPickedUp: 0,
@@ -159,30 +154,4 @@ Router.route('/additem', function () {
   this.layout('LayoutOne');
   // render the Home template with a custom data context
   this.render('additem');
-});
-
-Router.route('/request/:_id', function () {
-  this.layout('LayoutOne');
-  // render the Home template with a custom data context
-
-  var findResult = Items.findOne({_id: this.params._id});
-
-  if (findResult)
-  {
-    var ownerFindResult = Meteor.users.findOne({_id: findResult.ownerID});
-    if (ownerFindResult)
-    {
-      this.render('ShowSingleItem', {data: {item: findResult, owner: ownerFindResult}});
-    }
-    else
-    {
-      this.render('ShowSingleItem', {data: {}});
-    }
-  }
-  else
-  {
-    this.render('ShowSingleItem', {data: {}});
-  }
-
-
 });
