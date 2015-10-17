@@ -1,0 +1,18 @@
+<template name="notifications">
+	{{#each notifications}}
+		{{> notification}}
+	{{/each}}
+</template>
+
+<template name="notification">
+	<dl class="dl-horizontal">
+	<dt>Message</dt>
+	<dd>{{message}}</dd>
+	<dt>PickupTime</dt>
+	<dd>{{pickupTimeRequested}}</dd>
+	<dt>Actions</dt>
+	<dd><button class='delete'>Dismiss</button>
+	<button class='pickedUp'>Picked Up</button></dd>
+	</dl>
+	
+</template>

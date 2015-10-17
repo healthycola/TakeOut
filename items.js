@@ -1,4 +1,5 @@
 Items = new Mongo.Collection("items");
+PrivateMessages = new Mongo.Collection("pms");
 
 if (Meteor.isClient) {
 	Template.additem.onRendered(function() {
@@ -10,6 +11,32 @@ if (Meteor.isClient) {
   Template.additem.helpers({
     imageURL: function () {
       return Session.get('imageURL');
+    }
+  });
+  
+  Template.header.helpers({
+    notificationCount: function () {
+      if (Meteor.user())
+      {
+        return PrivateMessages.find({toID: Meteor.userId()}).fetch().length;
+      }
+      else
+      {
+        return 0;
+      }
+    }
+  });
+  
+  Template.notifications.helpers({
+    notifications: function () {
+      if (Meteor.user())
+      {
+        return PrivateMessages.find({toID: Meteor.userId()});
+      }
+      else
+      {
+        return null;
+      }
     }
   });
   
@@ -45,14 +72,25 @@ if (Meteor.isClient) {
   Template.Request.events({
     'submit #requestItem': function(event) {
       
-      console.log(Meteor.users.findOne({_id : this.item.ownerID}).profile.email);
+      var messageContent = event.target.message.value + "<br/>" + event.target.schedulingRequest.value;
+       var test = PrivateMessages.insert(
+        {
+          fromID: Meteor.userId(),
+          toID: this.item.ownerID,
+          message: event.target.message.value,
+          pickupTimeRequested: event.target.schedulingRequest.value
+        });
+        
       Meteor.call('sendEmail',
             (Meteor.users.findOne({_id : this.item.ownerID})).profile.email,
             Meteor.user().profile.email,
             'Request from TakeOut',
-            event.target.message.value + "<br/>" + event.target.schedulingRequest.value);
-            
-    return false;
+            messageContent);
+       
+         console.log(test);
+      Router.go('RequestSent');
+      
+      return false;
     },
     
     'change .filename': function (event) {
@@ -83,6 +121,12 @@ if (Meteor.isClient) {
       Items.remove(this._id);
     }
   });
+  
+  Template.notification.events({
+    'click .delete': function(event) {
+      PrivateMessages.remove(this._id);
+    }
+  });
 };
 
 Router.route('/ShowItems', function () {
@@ -95,6 +139,12 @@ Router.route('/MyItems', function () {
   this.layout('LayoutOne');
   // render the Home template with a custom data context
   this.render('MyItems');
+});
+
+Router.route('/RequestSent', function () {
+  this.layout('LayoutOne');
+  // render the Home template with a custom data context
+  this.render('RequestSent');
 });
 
 Router.route('/items/:_id', function () {
@@ -142,6 +192,13 @@ Router.route('/request/:_id', function () {
   {
     this.render('Request', {data: {}});
   }
+});
+
+Router.route('notifications', function () {
+  this.layout('LayoutOne');
+  // render the Home template with a custom data context
+
+  this.render('notifications');
 });
 
 
