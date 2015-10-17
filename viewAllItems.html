@@ -1,0 +1,24 @@
+<template name="ShowItems">
+	<table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Posted Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each items}}
+     	   {{> item}}
+      	{{/each}}
+      </tbody>
+    </table>
+</template>
+
+<template name="item">
+	<tr>
+		<td>{{name}}</td>
+		<td>{{ageDay}} days {{ageHour}} hours</td>
+		<td>{{postedOn}}</td>
+	</tr>
+</template>

@@ -88,11 +88,14 @@ Router.route('/signup', function () {
   this.render('signupstuff');
 });
 
-//Router.route('/profile');
-
-
 Router.route('/profile', function () {
   this.layout('LayoutOne');
   // render the Home template with a custom data context
   this.render('profile');
+});
+
+Router.route('/additem', function () {
+  this.layout('LayoutOne');
+  // render the Home template with a custom data context
+  this.render('additem');
 });

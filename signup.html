@@ -4,8 +4,8 @@
   Hope you're having a great day! Please use the links above to navigate around the site.<br/>
   {{> logoutForm}}
   {{else}}
-  {{> signupForm}}
   {{> loginForm}}
+  {{> signupForm}}
   {{/if}}
 </template>
 
@@ -15,7 +15,7 @@
 </template>
 
 <template name="signupForm">
-  <h2>Sign Up</h2>
+  <h2 class="sub-header">Sign Up</h2>
   
   <form class="form-horizontal" id="signup-form">
     <div class="form-group">
@@ -69,7 +69,7 @@
 </template>
 
 <template name="loginForm">
-  <h2>Sign In</h2>
+  <h2 class="sub-header">Sign In</h2>
   
   <form class="form-horizontal" id="login-form">
     <div class="form-group">

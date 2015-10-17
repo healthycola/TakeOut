@@ -29,10 +29,19 @@
               <li><a href="#">Contact Us</a></li>
             </ul>
           </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Items<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="/ShowItems">Show All Items</a></li>
+              <li role="separator" class="divider"></li>
+              <li><a href="/addItem">Add New Item</a></li>
+            </ul>
+          </li>
         {{else}}
         <li><a href="/signup">Signup</a></li>
         {{/if}}
       </ul>
+
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
