@@ -73,14 +73,23 @@ if (Meteor.isServer) {
 
 Router.route('/', function () {
   // render the Home template with a custom data context
-  this.render('signupstuff');
+  this.layout('LayoutOne');
+  
+  this.render('homepage');
 });
 
+Router.route('/signup', function () {
+  // render the Home template with a custom data context
+  this.layout('LayoutOne');
+  
+  this.render('signupstuff');
+});
 
 //Router.route('/profile');
 
 
 Router.route('/profile', function () {
+  this.layout('LayoutOne');
   // render the Home template with a custom data context
   this.render('profile');
 });

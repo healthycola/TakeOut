@@ -1,0 +1,19 @@
+<body>
+</body>
+
+<template name="LayoutOne">
+	{{> header}}
+	<div id="wrap">
+	<div class="container">
+		<article>
+			{{> yield}}
+		</article>
+	</div>
+	</div>
+	
+	<div id="footer">
+		<div class="container">
+			<p class="text-muted">(c) Takeout</p>
+		</div>
+	</div>
+</template>
