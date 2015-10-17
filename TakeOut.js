@@ -54,7 +54,7 @@ if (Meteor.isClient) {
   });
 
   Template.logoutForm.events({
-    "submit #logout-form": function(event) {
+    "click .logoutLink": function(event) {
       event.preventDefault();
       Meteor.logout(function(error) {
         if (error) {
