@@ -53,6 +53,12 @@ Template.email.events({
         if (error) {
           // Display the user creation error to the user however you want
         }
+        else
+        {
+          Router.go('/profile');
+        }
+
+        return false;
       });
     }
   });
@@ -68,6 +74,10 @@ Template.email.events({
         function(error) {
           if (error) {
             // Display the login error to the user however you want
+          }
+          else
+          {
+            Router.go('/profile');
           }
         }
       );

@@ -12,6 +12,7 @@
                 <span class="text-muted">Name: {{currentUser.profile.firstName}} {{currentUser.profile.lastName}}</span><br>
                 <span class="text-muted">Account Type: {{currentUser.profile.accountType}}</span><br>
                 <span class="text-muted">Username: {{currentUser.username}}</span><br>
+                <span class="text-muted">Email: {{#each email in currentUser.emails}} {{email.address}} {{/each}}</span><br>
               </div>
               <div class="col-md-4">
                 <label>Purchase Infomation</label><br>
