@@ -15,11 +15,44 @@
     </table>
 </template>
 
+<template name="MyItems">
+	<table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Posted Date</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each items}}
+     	   {{> myItem}}
+      	{{/each}}
+      </tbody>
+    </table>
+</template>
+
 <template name="item">
 	<tr class="itemRow">
 		<td>{{name}}</td>
 		<td>{{ageDay}} days {{ageHour}} hours</td>
 		<td>{{postedOn}}</td>
+	</tr>
+</template>
+
+<template name="myItem">
+	<tr class="itemRow">
+		<td>{{name}}</td>
+		<td>{{ageDay}} days {{ageHour}} hours</td>
+		<td>{{postedOn}}</td>
+        <td>
+            <button class="edit">Edit</button>
+        </td>
+        <td>
+            <button class="delete">Delete</button>
+        </td>
 	</tr>
 </template>
 

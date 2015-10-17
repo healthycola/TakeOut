@@ -31,10 +31,22 @@ if (Meteor.isClient) {
 		}
 	});
   
+  Template.MyItems.helpers({
+		items: function () {
+			return Items.find({ownerID: Meteor.userId()});
+		}
+	});
+  
   Template.item.events({
     	'click .itemRow': function(event) {
         console.log(this);
         Router.go('/items/' + this._id);
+    }
+  });
+  
+  Template.myItem.events({
+    'click .delete': function(event) {
+      Items.remove(this._id);
     }
   });
 };
@@ -43,6 +55,12 @@ Router.route('/ShowItems', function () {
   this.layout('LayoutOne');
   // render the Home template with a custom data context
   this.render('ShowItems');
+});
+
+Router.route('/MyItems', function () {
+  this.layout('LayoutOne');
+  // render the Home template with a custom data context
+  this.render('MyItems');
 });
 
 Router.route('/items/:_id', function () {
