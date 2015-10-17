@@ -18,7 +18,7 @@
 
       <ul class="nav navbar-nav navbar-right">
         {{#if currentUser}}
-          <li class="nav nav-pills active" role="presentation"><a href="#">Notifications <span class="badge">42</span></a></li>
+          <li class="nav nav-pills" role="presentation"><a href="#">Notifications <span class="badge">42</span></a></li>
           <li class="nav nav-pills" role="presentation"><a href="#">Messages <span class="badge">3</span></a></li>
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hi, {{currentUser.username}}! <span class="caret"></span></a>
@@ -32,8 +32,8 @@
         {{else}}
 
 
+
         {{/if}}
-        <li><a href="#">Link</a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
