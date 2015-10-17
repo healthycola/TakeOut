@@ -1,8 +1,7 @@
 <template name='signupstuff'>
   {{#if currentUser}}
-  Username: {{currentUser.username}}<br/>
-  Name: {{currentUser.profile.name}}<br/>
-  Account Type: {{currentUser.profile.accountType}}<br/>
+  Hello {{currentUser.profile.firstName}} :)<br/>
+  Hope you're having a great day! Please use the links above to navigate around the site.<br/>
   {{> logoutForm}}
   {{else}}
   {{> signupForm}}
@@ -16,41 +15,80 @@
 </template>
 
 <template name="signupForm">
-  <form id="signup-form">
-    <h2>Sign Up</h2>
-
-    <label for="signup-username">Username</label>
-    <input type="text" name="signupusername" placeholder="Username" />
-
-    <select name="accountType">
-      <option value="Restaurant - Donor">Restaurant - Donor</option>
-      <option value="Grocery Store - Donor">Grocery Store - Donor</option>
-      <option value="Individual - Donor">Individual - Donor</option>
-      <option value="Individual - Consumer">Individual - Consumer</option>
-      <option value="Pickup Service - Consumer">Pickup Service - Consumer</option>
-    </select>
-
-    <label for="signup-password">Password</label>
-    <input type="password" name="signuppassword" placeholder="Password" />
-
-    <label for="signup-name">Full Name</label>
-    <input type="text" name="signupname" placeholder="Full Name" />
-
-    <button type="submit">Sign Up</button>
+  <h2>Sign Up</h2>
+  
+  <form class="form-horizontal" id="signup-form">
+    <div class="form-group">
+      <label for="signup-username" class="col-sm-2 control-label">Username</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" name="signupusername" placeholder="Username">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="signup-password" class="col-sm-2 control-label">Password</label>
+      <div class="col-sm-10">
+        <input type="password" class="form-control" name="signuppassword" placeholder="Password">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="signup-FirstName" class="col-sm-2 control-label">First Name</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" name="signupFirstName" placeholder="First Name">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="signup-LastName" class="col-sm-2 control-label">Last Name</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" name="signupLastName" placeholder="Last Name">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="signup-Email" class="col-sm-2 control-label">Email</label>
+      <div class="col-sm-10">
+        <input type="email" class="form-control" name="signupEmail" placeholder="Email">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="signup-accountType" class="col-sm-2 control-label">Account Type</label>
+      <div class="col-sm-10">
+        <select class="form-control" name="accountType">
+          <option value="Restaurant - Donor">Restaurant - Donor</option>
+          <option value="Grocery Store - Donor">Grocery Store - Donor</option>
+          <option value="Individual - Donor">Individual - Donor</option>
+          <option value="Individual - Consumer">Individual - Consumer</option>
+          <option value="Pickup Service - Consumer">Pickup Service - Consumer</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-default">Sign Up</button>
+      </div>
+    </div>
   </form>
 </template>
 
 <template name="loginForm">
-  <form id="login-form">
-    <h2>Log In</h2>
-
-    <label for="login-username">Username</label>
-    <input type="text" name="loginusername" placeholder="Username" />
-
-    <label for="login-password">Password</label>
-    <input type="password" name="loginpassword" placeholder="Password" />
-
-    <button type="submit">Log In</button>
+  <h2>Sign In</h2>
+  
+  <form class="form-horizontal" id="login-form">
+    <div class="form-group">
+      <label for="login-username" class="col-sm-2 control-label">Username</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" name="loginusername" placeholder="Username">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+      <div class="col-sm-10">
+        <input type="password" class="form-control" name="loginpassword" placeholder="Password">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-default">Sign in</button>
+      </div>
+    </div>
   </form>
 </template>
 

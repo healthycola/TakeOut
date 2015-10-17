@@ -1,15 +1,48 @@
 <template name='profile'>
   {{#if currentUser}}
-  Username: {{currentUser.username}}<br/>
-  Name: {{currentUser.profile.name}}<br/>
-  Account Type: {{currentUser.profile.accountType}}<br/>
-
-
+  <h2>User Info</h2>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="col-md-8"><h4>Hi {{currentUser.profile.firstName}}!</h4><hr>
+              <div class="col-md-8">
+                <label>ID information</label><br>
+                <span class="text-muted">Name: {{currentUser.profile.firstName}} {{currentUser.profile.lastName}}</span><br>
+                <span class="text-muted">Account Type: {{currentUser.profile.accountType}}</span><br>
+                <span class="text-muted">Username: {{currentUser.username}}</span><br>
+              </div>
+              <div class="col-md-4">
+                <label>Purchase Infomation</label><br>
+                <span class="text-muted">Items donated: {{currentUser.profile.itemsDonated}}</span><br>
+                <span class="text-muted">Items picked up: {{currentUser.profile.itemsPickedUp}}</span><br>
+              </div>
+            </div>
+            <div class="col-md-4"><h4>Images</h4><hr>
+              <div class="col-md-4"><span><a href="#"><img width="100%" src="http://www.wineandfooddc.com/cms/wp-content/uploads/id-required.png"></a></span></div>
+              <div class="col-md-4"><span><a href="#"><img width="100%" src="http://library.noctrl.edu/images/books/id_back.jpg"></a></span></div>
+            </div>
+            <div class="col-md-4">
+              <div class="col-md-4 thumb"><span><a href="#"><img class="img-responsive" width="100%" src="http://static.squarespace.com/static/523ce201e4b0cd883dbb8bbf/t/53bf2302e4b06e125c374401/1405035267633/profile-icon.png"></a></span></div>
+              <div class="col-md-4 thumb"><span><a href="#"><img class="img-responsive" width="100%" src="http://static.squarespace.com/static/523ce201e4b0cd883dbb8bbf/t/53bf2302e4b06e125c374401/1405035267633/profile-icon.png"></a></span></div>
+              <div class="col-md-4 thumb"><span><a href="#"><img class="img-responsive" width="100%" src="http://static.squarespace.com/static/523ce201e4b0cd883dbb8bbf/t/53bf2302e4b06e125c374401/1405035267633/profile-icon.png"></a></span></div>
+            </div>
+          </div>
+          <div class="container">
+          <div class="col-md-12">
+            <a class="btn btn-default pull-right" href="profile/edit"><i class="glyphicon glyphicon-pencil"></i> Edit</a>
+          </div>
+          </div>
+        </div>
+      </div>  
+    </div>  
+  </div>
   {{else}}
-  {{> profileLoggedin}}
+  {{> profileNotLoggedIn}}
   {{/if}}
 </template>
 
-<template name="profileLoggedin">
-  <h1>Profile Page22</h1>
+<template name="profileNotLoggedIn">
+  Please <a href="/signup">log in</a> to see this page!
 </template>

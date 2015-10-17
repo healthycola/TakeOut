@@ -22,11 +22,14 @@ if (Meteor.isClient) {
       Accounts.createUser({
         username: event.target.signupusername.value,
         password: event.target.signuppassword.value,
+        email: event.target.signupEmail.value,
         profile: {
-          name: event.target.signupname.value,
+          firstName: event.target.signupFirstName.value,
+          lastName: event.target.signupLastName.value,
           accountType: event.target.accountType.value,
           itemsDonated: 0,
-          itemsPickedUp: 0
+          itemsPickedUp: 0,
+          signupDate: new Date()
         }
       }, function(error) {
         if (error) {
