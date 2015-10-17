@@ -186,6 +186,17 @@ h1 {
 	border-bottom-color: #999;
 }
 
+.dt {
+  line-height: 2;
+	border-bottom-color: #999;
+}
+
+.dd {
+  line-height: 2;
+	border-bottom-color: #999;
+}
+
+
 .navbar-collapse.in { /*3.0.2 bug workaround*/
     overflow-y: visible;
 }

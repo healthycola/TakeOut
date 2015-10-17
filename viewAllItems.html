@@ -5,6 +5,8 @@
           <th>Name</th>
           <th>Age</th>
           <th>Posted Date</th>
+          <th></th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -39,6 +41,7 @@
 		<td class="itemClick table-hover">{{name}}</td>
 		<td class="itemClick table-hover">{{ageDay}} days {{ageHour}} hours</td>
 		<td class="itemClick table-hover">{{postedOn}}</td>
+    <td class="itemClick table-hover"><img src={{imageURL}}></td>
     <td>{{> email}}</td>
   </tr>
 
@@ -70,10 +73,11 @@
 
 <template name="ShowSingleItem">
 	{{#if item}}
-    <dl class="dl-horizontal">
-        <dt>Name:</dt>
-        <dd>{{item.name}}</dd>
-        <dt>Posted by:</dt>
+  <div class="panel panel-default">
+	<div class="panel-heading">{{item.name}}</div>
+	<div class="panel-body">
+		<dl class="dl-horizontal">
+		<dt>Posted by:</dt>
         <dd>{{owner.profile.firstName}}</dd>
         <dt>Posted on:</dt>
         <dd>{{item.postedOn}}</dd>
@@ -85,7 +89,9 @@
         <dd>{{item.pickupBefore}}</dd>
         <dt>Image</dt>
         <dd><img src={{item.imageURL}}></dd>
-    </dl>
+		</dl>
+	</div>
+	</div>
     {{else}}
     No such item exists.
     {{/if}}
