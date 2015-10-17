@@ -28,11 +28,14 @@ if (Meteor.isClient) {
       Accounts.createUser({
         username: event.target.signupusername.value,
         password: event.target.signuppassword.value,
+        email: event.target.signupEmail.value,
         profile: {
-          name: event.target.signupname.value,
+          firstName: event.target.signupFirstName.value,
+          lastName: event.target.signupLastName.value,
           accountType: event.target.accountType.value,
           itemsDonated: 0,
-          itemsPickedUp: 0
+          itemsPickedUp: 0,
+          signupDate: new Date()
         }
       }, function(error) {
         if (error) {
@@ -92,17 +95,20 @@ Router.route('/signup', function () {
   this.render('signupstuff');
 });
 
-//Router.route('/profile');
-
-
 Router.route('/profile', function () {
   this.layout('LayoutOne');
   // render the Home template with a custom data context
   this.render('profile');
 });
 
+
 Router.route('/feed', function () {
   this.layout('LayoutOne');
   // render the Home template with a custom data context
   this.render('feed');
+
+Router.route('/additem', function () {
+  this.layout('LayoutOne');
+  // render the Home template with a custom data context
+  this.render('additem');
 });

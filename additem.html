@@ -1,0 +1,53 @@
+<template name="additem">
+  {{#if currentUser}}
+  <h2 class="sub-header">Add Item</h2>
+  
+  <form class="form-horizontal" id="additem">
+    <div class="form-group">
+      <label for="name" class="col-sm-2 control-label">Name</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" name="name" placeholder="Item Name">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="age" class="col-sm-2 control-label">Age</label>
+      <div class="col-sm-10">
+        <div class="input-group">
+          <input type="text" class="form-control" name="ageInDays" aria-label="Age of item in days" value="0">
+          <span class="input-group-addon">days</span>
+          <input type="text" class="form-control" name="ageInHours" aria-label="Age of item in Hours" value="0">
+          <span class="input-group-addon" >hours</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="imageURL" class="col-sm-2 control-label">Image URL</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" name="imageURL" placeholder="http://imageurl.com">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="scheduling" class="col-sm-2 control-label">Scheduling Preference</label>
+      <div class="col-sm-10">
+        <label for="scheduling" class="control-label">After</label>
+        <div class="input-group datetimepicker">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+          <input class="set-due-date form-control" name="schedulingAfter" type="text"/>
+        </div>
+        <label for="scheduling" class="control-label">Before</label>
+        <div class="input-group datetimepicker">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+          <input class="set-due-date form-control" name="schedulingBefore" type="text"/>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-default">Add Item</button>
+      </div>
+    </div>
+  </form>
+  {{else}}
+  Please Log in!
+  {{/if}}
+</template>

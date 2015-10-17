@@ -18,3 +18,8 @@
   padding-top:20px;
   padding-bottom:20px;
 }
+
+.sub-header {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
