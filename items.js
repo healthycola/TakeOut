@@ -14,10 +14,10 @@ if (Meteor.isClient) {
           ageDay: event.target.ageInDays.value,
           ageHour: event.target.ageInHours.value,
           imageURL: event.target.imageURL.value,
-		  ownerID: Meteor.userId(),
-		  postedOn: new Date(),
+          ownerID: Meteor.userId(),
+          postedOn: new Date(),
           pickupAfter: event.target.schedulingAfter.value,
-		  pickupBefore: event.target.schedulingBefore.value,
+		      pickupBefore: event.target.schedulingBefore.value,
         });
 
     	Router.go('ShowItems');
@@ -30,6 +30,13 @@ if (Meteor.isClient) {
 			return Items.find();
 		}
 	});
+  
+  Template.item.events({
+    	'click .itemRow': function(event) {
+        console.log(this);
+        Router.go('/items/' + this._id);
+    }
+  });
 };
 
 Router.route('/ShowItems', function () {
@@ -37,6 +44,30 @@ Router.route('/ShowItems', function () {
   // render the Home template with a custom data context
   this.render('ShowItems');
 });
+
+Router.route('/items/:_id', function () {
+  this.layout('LayoutOne');
+  var findResult = Items.findOne({_id: this.params._id});
+  
+  if (findResult)
+  {
+    var ownerFindResult = Meteor.users.findOne({_id: findResult.ownerID});
+    if (ownerFindResult)
+    {
+      this.render('ShowSingleItem', {data: {item: findResult, owner: ownerFindResult}});
+    }
+    else
+    {
+      this.render('ShowSingleItem', {data: {}});
+    }
+  }
+  else
+  {
+    this.render('ShowSingleItem', {data: {}});
+  }
+});
+
+
 
 // Router.route('/items/:_id', function () {
 //   var item = Items.findOne({_id: this.params._id});

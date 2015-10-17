@@ -1,5 +1,5 @@
 <template name="ShowItems">
-	<table class="table">
+	<table class="table table-hover">
       <thead>
         <tr>
           <th>Name</th>
@@ -16,9 +16,31 @@
 </template>
 
 <template name="item">
-	<tr>
+	<tr class="itemRow">
 		<td>{{name}}</td>
 		<td>{{ageDay}} days {{ageHour}} hours</td>
 		<td>{{postedOn}}</td>
 	</tr>
 </template>
+
+<template name="ShowSingleItem">
+	{{#if item}}
+    <dl class="dl-horizontal">
+        <dt>Name:</dt>
+        <dd>{{item.name}}</dd>
+        <dt>Posted by:</dt>
+        <dd>{{owner.profile.firstName}}</dd>
+        <dt>Posted on:</dt>
+        <dd>{{item.postedOn}}</dd>
+        <dt>Age of Item (from posted date):</dt>
+        <dd>{{item.ageDay}} days {{item.ageHour}} hour</dd>
+        <dt>Pickup after:</dt>
+        <dd>{{item.pickupAfter}}</dd>
+        <dt>Pickup before:</dt>
+        <dd>{{item.pickupBefore}}</dd>
+    </dl>
+    {{else}}
+    No such item exists.
+    {{/if}}
+</template>
+
