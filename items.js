@@ -1,6 +1,14 @@
 Items = new Mongo.Collection("items");
 PrivateMessages = new Mongo.Collection("pms");
 
+Meteor.users.allow({
+  update: function (userId, doc, fieldNames, modifier) {
+    /* user and doc checks ,
+    return true to allow insert */
+    return true; 
+  }
+});
+  
 if (Meteor.isClient) {
 	Template.additem.onRendered(function() {
 		this.$('.datetimepicker').datetimepicker();
@@ -87,7 +95,7 @@ if (Meteor.isClient) {
             'Request from TakeOut',
             messageContent);
        
-         console.log(test);
+         console.log(test);userId, doc, fieldNames, modifier
       Router.go('RequestSent');
       
       return false;
@@ -124,6 +132,14 @@ if (Meteor.isClient) {
   
   Template.notification.events({
     'click .delete': function(event) {
+      PrivateMessages.remove(this._id);
+    }
+  });
+  
+  Template.notification.events({
+    'click .pickedUp': function(event) {
+      Meteor.users.update({_id: this.fromID}, { $inc: { "profile.itemsPickedUp": 1} });
+      Meteor.users.update({_id: this.toID}, { $inc: { "profile.itemsDonated": 1} });
       PrivateMessages.remove(this._id);
     }
   });
