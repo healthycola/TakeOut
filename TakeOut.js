@@ -41,6 +41,12 @@ if (Meteor.isClient) {
         if (error) {
           // Display the user creation error to the user however you want
         }
+        else
+        {
+          Router.go('/profile');
+        }
+        
+        return false;
       });
     }
   });
@@ -56,6 +62,10 @@ if (Meteor.isClient) {
         function(error) {
           if (error) {
             // Display the login error to the user however you want
+          }
+          else
+          {
+            Router.go('/profile');
           }
         }
       );

@@ -7,8 +7,7 @@ if (Meteor.isClient) {
 
 	 Template.additem.events({
     	'submit #additem': function(event) {
-		var controller = Iron.controller();
-
+			
 		var insertedItem = Items.insert(
         {
           name: event.target.name.value,
@@ -21,9 +20,8 @@ if (Meteor.isClient) {
 		  pickupBefore: event.target.schedulingBefore.value,
         });
 
-    Router.go('ShowItems');
+    	Router.go('ShowItems');
 		return false;
-
     }
   });
 
