@@ -4,11 +4,11 @@ if (Meteor.isClient) {
 	Template.additem.onRendered(function() {
 		this.$('.datetimepicker').datetimepicker();
 	});
-	
+
 	 Template.additem.events({
     	'submit #additem': function(event) {
 		var controller = Iron.controller();
-		
+
 		var insertedItem = Items.insert(
         {
           name: event.target.name.value,
@@ -20,14 +20,13 @@ if (Meteor.isClient) {
           pickupAfter: event.target.schedulingAfter.value,
 		  pickupBefore: event.target.schedulingBefore.value,
         });
-		
-		controller.layout('LayoutOne');
-    	controller.render('ShowItems');
-		
+
+    Router.go('ShowItems');
 		return false;
+
     }
   });
-  
+
 	Template.ShowItems.helpers({
 		items: function () {
 			return Items.find();

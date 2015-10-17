@@ -106,6 +106,7 @@ Router.route('/feed', function () {
   this.layout('LayoutOne');
   // render the Home template with a custom data context
   this.render('feed');
+});
 
 Router.route('/additem', function () {
   this.layout('LayoutOne');
