@@ -81,12 +81,14 @@ if (Meteor.isClient) {
     'submit #requestItem': function(event) {
       
       var messageContent = event.target.message.value + "<br/>" + event.target.schedulingRequest.value;
+      console.log(this);
        var test = PrivateMessages.insert(
         {
           fromID: Meteor.userId(),
           toID: this.item.ownerID,
           message: event.target.message.value,
-          pickupTimeRequested: event.target.schedulingRequest.value
+          pickupTimeRequested: event.target.schedulingRequest.value,
+          item: this.item._id
         });
         
       Meteor.call('sendEmail',
@@ -95,7 +97,6 @@ if (Meteor.isClient) {
             'Request from TakeOut',
             messageContent);
        
-         console.log(test);userId, doc, fieldNames, modifier
       Router.go('RequestSent');
       
       return false;
@@ -141,6 +142,7 @@ if (Meteor.isClient) {
       Meteor.users.update({_id: this.fromID}, { $inc: { "profile.itemsPickedUp": 1} });
       Meteor.users.update({_id: this.toID}, { $inc: { "profile.itemsDonated": 1} });
       PrivateMessages.remove(this._id);
+      Items.remove(this.item);
     }
   });
 };
