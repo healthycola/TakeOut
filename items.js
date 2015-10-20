@@ -35,6 +35,15 @@ if (Meteor.isClient) {
     }
   });
   
+  Template.notification.helpers({
+    item: function() {
+      var stuff = Items.findOne({_id: this.item});
+      console.log(stuff);
+      console.log(this);
+      return stuff;
+    }
+  });
+  
   Template.notifications.helpers({
     notifications: function () {
       if (Meteor.user())
@@ -90,13 +99,13 @@ if (Meteor.isClient) {
           pickupTimeRequested: event.target.schedulingRequest.value,
           item: this.item._id
         });
-        
+      /*
       Meteor.call('sendEmail',
             (Meteor.users.findOne({_id : this.item.ownerID})).profile.email,
             Meteor.user().profile.email,
             'Request from TakeOut',
             messageContent);
-       
+       */
       Router.go('RequestSent');
       
       return false;
