@@ -9,14 +9,52 @@
 	<div class="panel-heading">Message</div>
 	<div class="panel-body">
 		<dl class="dl-horizontal">
+		<dt>Item</dt>
+		<dd><a href="/items/{{item._id}}">{{item.name}}</a></dd>
 		<dt>Message</dt>
 		<dd>{{message}}</dd>
 		<dt>PickupTime</dt>
 		<dd>{{pickupTimeRequested}}</dd>
-		<dd><a href="/items/{{item._id}}">{{item.name}}</a></dd>
 		</dl>
 	</div>
-	<div class="panel-footer"><button class='delete'>Dismiss</button>
-	<button class='pickedUp'>Picked Up</button></div>
+	<div class="panel-footer">
+		<button class='delete'>Dismiss</button>
+		<button class='pickedUp'>Picked Up</button>
+		<a href="/notifications/{{_id}}">Full Thread</a>
 	</div>
+	</div>
+</template>
+
+<template name="fullNotificationThread">
+	{{#if notificationThread}}
+	<div class="panel panel-default">
+	<div class="panel-heading">{{item.name}} from {{fromUser.profile.firstName}}</div>
+	<div class="panel-body">
+		{{notificationThread.message}}
+	</div>
+	
+	{{#each reply in notificationThread.replies}}
+	<div class="panel-body">
+		{{reply.message}}
+	</div>
+	{{/each}}
+	</div>
+		
+	<form class="form-horizontal" id="addReplyToNotification">
+    <div class="form-group">
+      <label for="name" class="col-sm-2 control-label">Message</label>
+      <div class="col-sm-10">
+        <textarea rows="5" class="form-control" name="message" placeholder="Hi! I want to pick up this item!"></textarea>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-default">Send Reply</button>
+      </div>
+    </div>
+  </form>
+  
+	{{else}}
+	No such notification exists!
+	{{/if}}
 </template>

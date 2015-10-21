@@ -1,66 +1,30 @@
 Items = new Mongo.Collection("items");
-PrivateMessages = new Mongo.Collection("pms");
 
 Meteor.users.allow({
   update: function (userId, doc, fieldNames, modifier) {
     /* user and doc checks ,
     return true to allow insert */
-    return true; 
+    return true;
   }
 });
-  
+
 if (Meteor.isClient) {
-	Template.additem.onRendered(function() {
-		this.$('.datetimepicker').datetimepicker();
-	});
+  Template.additem.onRendered(function () {
+    this.$('.datetimepicker').datetimepicker();
+  });
 
   Session.setDefault('imageURL', '');
-  
+
   Template.additem.helpers({
     imageURL: function () {
       return Session.get('imageURL');
     }
   });
-  
-  Template.header.helpers({
-    notificationCount: function () {
-      if (Meteor.user())
-      {
-        return PrivateMessages.find({toID: Meteor.userId()}).fetch().length;
-      }
-      else
-      {
-        return 0;
-      }
-    }
-  });
-  
-  Template.notification.helpers({
-    item: function() {
-      var stuff = Items.findOne({_id: this.item});
-      console.log(stuff);
-      console.log(this);
-      return stuff;
-    }
-  });
-  
-  Template.notifications.helpers({
-    notifications: function () {
-      if (Meteor.user())
-      {
-        return PrivateMessages.find({toID: Meteor.userId()});
-      }
-      else
-      {
-        return null;
-      }
-    }
-  });
-  
+
   Template.additem.events({
-    'submit #additem': function(event) {
-  
-    var insertedItem = Items.insert(
+    'submit #additem': function (event) {
+
+      var insertedItem = Items.insert(
         {
           name: event.target.name.value,
           ageDay: event.target.ageInDays.value,
@@ -71,27 +35,27 @@ if (Meteor.isClient) {
           pickupAfter: event.target.schedulingAfter.value,
           pickupBefore: event.target.schedulingBefore.value,
         });
-      
+
       Session.set('imageURL', '');
       Router.go('ShowItems');
-    return false;
+      return false;
     },
-    
+
     'change .filename': function (event) {
       Session.set('imageURL', event.originalEvent.fpfile.url);
     }
   });
-  
-  Template.Request.onRendered(function() {
+
+  Template.Request.onRendered(function () {
     this.$('.datetimepicker').datetimepicker();
   });
 
   Template.Request.events({
-    'submit #requestItem': function(event) {
-      
+    'submit #requestItem': function (event) {
+
       var messageContent = event.target.message.value + "<br/>" + event.target.schedulingRequest.value;
       console.log(this);
-       var test = PrivateMessages.insert(
+      var test = PrivateMessages.insert(
         {
           fromID: Meteor.userId(),
           toID: this.item.ownerID,
@@ -107,54 +71,39 @@ if (Meteor.isClient) {
             messageContent);
        */
       Router.go('RequestSent');
-      
+
       return false;
     },
-    
+
     'change .filename': function (event) {
       Session.set('imageURL', event.originalEvent.fpfile.url);
     }
   });
 
-	Template.ShowItems.helpers({
-		items: function () {
-			return Items.find();
-		}
-	});
+  Template.ShowItems.helpers({
+    items: function () {
+      return Items.find();
+    }
+  });
 
   Template.MyItems.helpers({
-		items: function () {
-			return Items.find({ownerID: Meteor.userId()});
-		}
-	});
+    items: function () {
+      return Items.find({ ownerID: Meteor.userId() });
+    }
+  });
 
   Template.item.events({
-    	'click .itemClick': function(event) {
-        Router.go('/items/' + this._id);
+    'click .itemClick': function (event) {
+      Router.go('/items/' + this._id);
     }
   });
 
   Template.myItem.events({
-    'click .delete': function(event) {
+    'click .delete': function (event) {
       Items.remove(this._id);
     }
   });
-  
-  Template.notification.events({
-    'click .delete': function(event) {
-      PrivateMessages.remove(this._id);
-    }
-  });
-  
-  Template.notification.events({
-    'click .pickedUp': function(event) {
-      Meteor.users.update({_id: this.fromID}, { $inc: { "profile.itemsPickedUp": 1} });
-      Meteor.users.update({_id: this.toID}, { $inc: { "profile.itemsDonated": 1} });
-      PrivateMessages.remove(this._id);
-      Items.remove(this.item);
-    }
-  });
-};
+}
 
 Router.route('/ShowItems', function () {
   this.layout('LayoutOne');
@@ -176,23 +125,19 @@ Router.route('/RequestSent', function () {
 
 Router.route('/items/:_id', function () {
   this.layout('LayoutOne');
-  var findResult = Items.findOne({_id: this.params._id});
+  var findResult = Items.findOne({ _id: this.params._id });
 
-  if (findResult)
-  {
-    var ownerFindResult = Meteor.users.findOne({_id: findResult.ownerID});
-    if (ownerFindResult)
-    {
-      this.render('ShowSingleItem', {data: {item: findResult, owner: ownerFindResult}});
+  if (findResult) {
+    var ownerFindResult = Meteor.users.findOne({ _id: findResult.ownerID });
+    if (ownerFindResult) {
+      this.render('ShowSingleItem', { data: { item: findResult, owner: ownerFindResult } });
     }
-    else
-    {
-      this.render('ShowSingleItem', {data: {}});
+    else {
+      this.render('ShowSingleItem', { data: {} });
     }
   }
-  else
-  {
-    this.render('ShowSingleItem', {data: {}});
+  else {
+    this.render('ShowSingleItem', { data: {} });
   }
 });
 
@@ -201,31 +146,20 @@ Router.route('/request/:_id', function () {
   this.layout('LayoutOne');
   // render the Home template with a custom data context
 
-  var findResult = Items.findOne({_id: this.params._id});
+  var findResult = Items.findOne({ _id: this.params._id });
 
-  if (findResult)
-  {
-    var ownerFindResult = Meteor.users.findOne({_id: findResult.ownerID});
-    if (ownerFindResult)
-    {
-      this.render('Request', {data: {item: findResult, owner: ownerFindResult}});
+  if (findResult) {
+    var ownerFindResult = Meteor.users.findOne({ _id: findResult.ownerID });
+    if (ownerFindResult) {
+      this.render('Request', { data: { item: findResult, owner: ownerFindResult } });
     }
-    else
-    {
-      this.render('Request', {data: {}});
+    else {
+      this.render('Request', { data: {} });
     }
   }
-  else
-  {
-    this.render('Request', {data: {}});
+  else {
+    this.render('Request', { data: {} });
   }
-});
-
-Router.route('notifications', function () {
-  this.layout('LayoutOne');
-  // render the Home template with a custom data context
-
-  this.render('notifications');
 });
 
 
