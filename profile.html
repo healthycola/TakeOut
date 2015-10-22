@@ -1,23 +1,23 @@
 <template name='profile'>
-  {{#if currentUser}}
+  {{#if user}}
   <h2>User Info</h2>
   <div class="container">
     <div class="row">
       <div class="col-md-12">
         <div class="panel panel-default">
           <div class="panel-body">
-            <div class="col-md-8"><h4>Hi {{currentUser.profile.firstName}}!</h4><hr>
+            <div class="col-md-8"><h4>{{#if isCurrentUser}}Hi {{/if}}{{user.profile.firstName}}{{#if isCurrentUser}}{{else}} {{user.profile.lastName}}{{/if}}{{#if isCurrentUser}}!{{/if}}</h4><hr>
               <div class="col-md-8">
                 <label>ID information</label><br>
-                <span class="text-muted">Name: {{currentUser.profile.firstName}} {{currentUser.profile.lastName}}</span><br>
-                <span class="text-muted">Account Type: {{currentUser.profile.accountType}}</span><br>
-                <span class="text-muted">Username: {{currentUser.username}}</span><br>
-                <span class="text-muted">Email: {{#each email in currentUser.emails}} {{email.address}} {{/each}}</span><br>
+                <span class="text-muted">Name: {{user.profile.firstName}} {{user.profile.lastName}}</span><br>
+                <span class="text-muted">Account Type: {{user.profile.accountType}}</span><br>
+                <span class="text-muted">Username: {{user.username}}</span><br>
+                <span class="text-muted">Email: {{#each email in user.emails}} {{email.address}} {{/each}}</span><br>
               </div>
               <div class="col-md-4">
                 <label>Purchase Infomation</label><br>
-                <span class="text-muted">Items donated: {{currentUser.profile.itemsDonated}}</span><br>
-                <span class="text-muted">Items picked up: {{currentUser.profile.itemsPickedUp}}</span><br>
+                <span class="text-muted">Items donated: {{user.profile.itemsDonated}}</span><br>
+                <span class="text-muted">Items picked up: {{user.profile.itemsPickedUp}}</span><br>
               </div>
             </div>
             <div class="col-md-4"><h4>Images</h4><hr>

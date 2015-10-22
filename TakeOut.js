@@ -90,6 +90,12 @@ if (Meteor.isClient) {
       });
     }
   });
+  
+  Template.profile.helpers({
+    isCurrentUser: function() {
+      return this.user._id == Meteor.userId();
+    }
+  })
 }
 
 if (Meteor.isServer) {
@@ -139,7 +145,14 @@ Router.route('/signup', function () {
 Router.route('/profile', function () {
   this.layout('LayoutOne');
   // render the Home template with a custom data context
-  this.render('profile');
+  this.render('profile', {data: {user: Meteor.user() }});
+});
+
+Router.route('/users/:_id', function () {
+  this.layout('LayoutOne');
+  var findResult = Meteor.users.findOne({ _id: this.params._id });
+  // render the Home template with a custom data context
+  this.render('profile', {data: {user: findResult }});
 });
 
 Router.route('/feed', function () {

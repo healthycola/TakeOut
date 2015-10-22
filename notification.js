@@ -59,13 +59,20 @@ if (Meteor.isClient) {
   
   Template.fullNotificationThread.events({
     'submit #addReplyToNotification': function (event) {
-      
-      console.log(this);
-      PrivateMessages.update({_id: this.notificationThread._id}, {$push: { replies: {message: event.target.message.value, time: new Date() } }});
-      console.log(this);
+      PrivateMessages.update({_id: this.notificationThread._id}, {$push: { replies: {message: event.target.message.value, time: new Date(), fromID: Meteor.userId() } }});
       return false;
     }
   });
+  
+  Template.reply.helpers({
+    isCurrentUser: function() {
+      return this.fromID == Meteor.userId();
+    },
+    
+    user: function() {
+      return Meteor.users.findOne({ _id: this.fromID });
+    }
+  })
 }
 
 Router.route('notifications', function () {

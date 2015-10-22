@@ -28,15 +28,13 @@
 <template name="fullNotificationThread">
 	{{#if notificationThread}}
 	<div class="panel panel-default">
-	<div class="panel-heading">{{item.name}} from {{fromUser.profile.firstName}}</div>
-	<div class="panel-body">
+	<h2>Request for <a href="/items/{{item._id}}">{{item.name}}</a> from <i><a href="/users/{{fromUser._id}}">{{fromUser.profile.firstName}}</a></i></h2>
+	<div class="panel-body parentNotification">
 		{{notificationThread.message}}
 	</div>
 	
-	{{#each reply in notificationThread.replies}}
-	<div class="panel-body">
-		{{reply.message}}
-	</div>
+	{{#each notificationThread.replies}}
+		{{> reply}}
 	{{/each}}
 	</div>
 		
@@ -57,4 +55,26 @@
 	{{else}}
 	No such notification exists!
 	{{/if}}
+</template>
+
+<template name="reply">
+	<div class="reply">
+	{{#if isCurrentUser}}
+	<div class="text-right">
+		<div class="panel-heading replyHeader">
+			<em>{{user.profile.firstName}}</em> said
+		</div>
+		<div class="panel-body myReply">
+			{{message}}
+		</div>
+	</div>
+	{{else}}
+	<div class="text-left">
+		<div class="panel-heading replyHeader"><em>{{user.profile.firstName}}</em> said</div>
+		<div class="panel-body theirReply">
+			{{message}}
+		</div>
+	</div>
+	{{/if}}
+	</div>
 </template>
