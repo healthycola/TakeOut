@@ -61,7 +61,8 @@ if (Meteor.isClient) {
           toID: this.item.ownerID,
           message: event.target.message.value,
           pickupTimeRequested: event.target.schedulingRequest.value,
-          item: this.item._id
+          item: this.item._id,
+          replies: []
         });
       /*
       Meteor.call('sendEmail',

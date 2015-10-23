@@ -1,4 +1,10 @@
-<template name="notifications">
+<template name="yourItemRequests">
+	{{#each notifications}}
+		{{> notification}}
+	{{/each}}
+</template>
+
+<template name="yourRequests"><script>console.log(notifications)</script>
 	{{#each notifications}}
 		{{> notification}}
 	{{/each}}
@@ -18,9 +24,10 @@
 		</dl>
 	</div>
 	<div class="panel-footer">
-		<button class='delete'>Dismiss</button>
-		<button class='pickedUp'>Picked Up</button>
-		<a href="/notifications/{{_id}}">Full Thread</a>
+		<button class='delete'>Dismiss</button> 
+		<button class='pickedUp'>Picked Up</button> 
+		<a href="/notifications/{{_id}}">Full Thread</a> 
+		<span class="badge">{{#if isCurrentUser}}Request{{else}}Your request{{/if}}</span>
 	</div>
 	</div>
 </template>

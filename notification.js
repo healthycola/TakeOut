@@ -4,12 +4,28 @@ if (Meteor.isClient) {
   Template.header.helpers({
     notificationCount: function () {
       if (Meteor.user()) {
+        return PrivateMessages.find({ $or: [{ toID: Meteor.userId() }, {fromID: Meteor.userId()} ] }).fetch().length;
+      }
+      else {
+        return 0;
+      }
+    },
+    myItemRequestsCount: function () {
+      if (Meteor.user()) {
+        return PrivateMessages.find({ fromID: Meteor.userId() }).fetch().length;
+      }
+      else {
+        return 0;
+      }
+    },
+    myRequestsCount: function () {
+      if (Meteor.user()) {
         return PrivateMessages.find({ toID: Meteor.userId() }).fetch().length;
       }
       else {
         return 0;
       }
-    }
+    },
   });
   
   Template.notification.helpers({
@@ -18,13 +34,27 @@ if (Meteor.isClient) {
       console.log(stuff);
       console.log(this);
       return stuff;
+    },
+    isCurrentUser: function() {
+      return this.toID == Meteor.userId();
     }
   });
 
-  Template.notifications.helpers({
+  Template.yourItemRequests.helpers({
     notifications: function () {
       if (Meteor.user()) {
         return PrivateMessages.find({ toID: Meteor.userId() });
+      }
+      else {
+        return null;
+      }
+    }
+  });
+  
+  Template.yourRequests.helpers({
+    notifications: function () {
+      if (Meteor.user()) {
+        return PrivateMessages.find({ fromID: Meteor.userId() });
       }
       else {
         return null;
@@ -75,12 +105,20 @@ if (Meteor.isClient) {
   })
 }
 
-Router.route('notifications', function () {
+Router.route('yourItemRequests', function () {
   this.layout('LayoutOne');
   // render the Home template with a custom data context
 
-  this.render('notifications');
+  this.render('yourItemRequests');
 });
+
+Router.route('yourRequests', function () {
+  this.layout('LayoutOne');
+  // render the Home template with a custom data context
+
+  this.render('yourRequests');
+});
+
 
 Router.route('notifications/:_id', function () {
   this.layout('LayoutOne');

@@ -20,7 +20,13 @@
 
       <ul class="nav navbar-nav navbar-right">
         {{#if currentUser}}
-          <li class="nav nav-pills" role="presentation"><a href="/notifications">Notifications <span class="badge">{{notificationCount}}</span></a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Notifications <span class="badge">{{notificationCount}}</span><span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="/yourItemRequests">Your Requests <span class="badge">{{myItemRequestsCount}}</span></a></li>
+              <li><a href="/yourRequests">Requests For You <span class="badge">{{myRequestsCount}}</span></a></li>
+            </ul>
+          </li>
           <li class="nav nav-pills" role="presentation"><a href="#">Messages <span class="badge">3</span></a></li>
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hi, {{currentUser.profile.firstName}}! <span class="caret"></span></a>
