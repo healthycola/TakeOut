@@ -11,15 +11,23 @@
 </template>
 
 <template name="notifications">
-	{{#each notifications}}
-		{{> notification}}
-	{{/each}}
+	{{#if isCountZero notifications}}
+		You have no notifications!
+	{{else}}
+		{{#each notifications}}
+			{{> notification}}
+		{{/each}}
+	{{/if}}
 </template>
 
 <template name="pendingRequests">
-	{{#each notifications}}
-		{{> notification}}
-	{{/each}}
+	{{#if isCountZero notifications}}
+		You have no pending notifications!
+	{{else}}
+		{{#each notifications}}
+			{{> notification}}
+		{{/each}}
+	{{/if}}
 </template>
 
 <template name="notification">
@@ -47,36 +55,33 @@
 <template name="fullNotificationThread">
 	{{#if notificationThread}}
 	<div class="panel panel-default">
-	<h2>Request for <a href="/items/{{item._id}}">{{item.name}}</a> from <i><a href="/users/{{fromUser._id}}">{{fromUser.profile.firstName}}</a></i></h2>
-	<div class="panel-body parentNotification">
-		{{notificationThread.message}}
+		<h2>Request for <a href="/items/{{item._id}}">{{item.name}}</a> from <i><a href="/users/{{fromUser._id}}">{{fromUser.profile.firstName}}</a></i></h2>
+		<div class="panel-body parentNotification">
+			{{notificationThread.message}}
+		</div>
+
+		{{#each notificationThread.replies}} {{> reply}} {{/each}}
 	</div>
-	
-	{{#each notificationThread.replies}}
-		{{> reply}}
-	{{/each}}
-	</div>
-	
-	{{#if isItemStillAvailable }}
+
+	{{#if notificationThread.openThread }}
 	<form class="form-horizontal" id="addReplyToNotification">
-    <div class="form-group">
-      <label for="name" class="col-sm-2 control-label">Message</label>
-      <div class="col-sm-10">
-        <textarea rows="5" class="form-control" name="message" placeholder="Hi! I want to pick up this item!"></textarea>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
-        <button type="submit" class="btn btn-default">Send Reply</button>
-      </div>
-    </div>
-  </form>
-  {{else}}
-  <div class="alert alert-success" role="alert">Item was picked up!</div>
-  {{/if}}
-  
+		<div class="form-group">
+			<label for="name" class="col-sm-2 control-label">Message</label>
+			<div class="col-sm-10">
+				<textarea rows="5" class="form-control" name="message" placeholder="Hi! I want to pick up this item!"></textarea>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<button type="submit" class="btn btn-default">Send Reply</button>
+			</div>
+		</div>
+	</form>
 	{{else}}
-	No such notification exists!
+	<div class="alert alert-success" role="alert">Item was picked up!</div>
+	{{/if}} 
+	{{else}} 
+	No such notification exists! 
 	{{/if}}
 </template>
 

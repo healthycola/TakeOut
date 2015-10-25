@@ -52,6 +52,7 @@ if (Meteor.isClient) {
       var latLng = Geolocation.latLng();
 
       if (! latLng) {
+        latLng = {};
         latLng.lng  = 0;
         latLng.lat = 0;
       }
@@ -119,7 +120,7 @@ if (Meteor.isClient) {
           replies: [],
           notifyFromUser: false,
           notifyToUser: true,
-          pickupComplete: false
+          openThread: true
         });
 
       /*
@@ -204,20 +205,6 @@ if (Meteor.isClient) {
   Template.myItem.events({
     'click .delete': function (event) {
       Items.remove(this._id);
-    }
-  });
-
-  Template.notification.events({
-    'click .delete': function(event) {
-      PrivateMessages.remove(this._id);
-    }
-  });
-
-  Template.notification.events({
-    'click .pickedUp': function(event) {
-      Meteor.users.update({_id: this.fromID}, { $inc: { "profile.itemsPickedUp": 1} });
-      Meteor.users.update({_id: this.toID}, { $inc: { "profile.itemsDonated": 1} });
-      PrivateMessages.remove(this._id);
     }
   });
 };
