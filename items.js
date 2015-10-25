@@ -5,23 +5,23 @@ Meteor.users.allow({
   update: function (userId, doc, fieldNames, modifier) {
     /* user and doc checks ,
     return true to allow insert */
-    return true; 
+    return true;
   }
 });
-  
+
 if (Meteor.isClient) {
 	Template.additem.onRendered(function() {
 		this.$('.datetimepicker').datetimepicker();
 	});
 
   Session.setDefault('imageURL', '');
-  
+
   Template.additem.helpers({
     imageURL: function () {
       return Session.get('imageURL');
     }
   });
-  
+
   Template.header.helpers({
     notificationCount: function () {
       if (Meteor.user())
@@ -34,7 +34,7 @@ if (Meteor.isClient) {
       }
     }
   });
-  
+
   Template.notifications.helpers({
     notifications: function () {
       if (Meteor.user())
@@ -47,39 +47,66 @@ if (Meteor.isClient) {
       }
     }
   });
-  
+
+  var addItem = function () {
+      var latLng = Geolocation.latLng();
+
+      if (! latLng) {
+        latLng.lng  = 0;
+        latLng.lat = 0;
+      }
+
+      Session.set("device-lat", latLng.lat);
+      Session.set("device-lng", latLng.lng);
+
+      console.log(latLng);
+
+      var insertedItem = Items.insert(
+          {
+            name: event.target.name.value,
+            ageDay: event.target.ageInDays.value,
+            ageHour: event.target.ageInHours.value,
+            imageURL: event.target.imageURL.value,
+            ownerID: Meteor.userId(),
+            postedOn: new Date(),
+            pickupAfter: event.target.schedulingAfter.value,
+            pickupBefore: event.target.schedulingBefore.value,
+            loc : {
+              type: "Point",
+              coordinates: [ latLng.lng, latLng.lat ]
+            }
+
+          });
+
+        Session.set('imageURL', '');
+        Router.go('ShowItems');
+  };
+
   Template.additem.events({
     'submit #additem': function(event) {
-  
-    var insertedItem = Items.insert(
-        {
-          name: event.target.name.value,
-          ageDay: event.target.ageInDays.value,
-          ageHour: event.target.ageInHours.value,
-          imageURL: event.target.imageURL.value,
-          ownerID: Meteor.userId(),
-          postedOn: new Date(),
-          pickupAfter: event.target.schedulingAfter.value,
-          pickupBefore: event.target.schedulingBefore.value,
-        });
-      
-      Session.set('imageURL', '');
-      Router.go('ShowItems');
+    addItem();
     return false;
     },
-    
+
     'change .filename': function (event) {
       Session.set('imageURL', event.originalEvent.fpfile.url);
     }
   });
-  
+
+  var onRequestRendered = function (item) {
+    $('.datetimepicker').datetimepicker({
+      minDate: new Date(item.pickupAfter),
+      maxDate: new Date(item.pickupBefore)
+    });
+  };
+
   Template.Request.onRendered(function() {
-    this.$('.datetimepicker').datetimepicker();
+    onRequestRendered(this.data.item);
   });
 
   Template.Request.events({
     'submit #requestItem': function(event) {
-      
+
       var messageContent = event.target.message.value + "<br/>" + event.target.schedulingRequest.value;
        var test = PrivateMessages.insert(
         {
@@ -88,19 +115,19 @@ if (Meteor.isClient) {
           message: event.target.message.value,
           pickupTimeRequested: event.target.schedulingRequest.value
         });
-        
+
       Meteor.call('sendEmail',
             (Meteor.users.findOne({_id : this.item.ownerID})).profile.email,
             Meteor.user().profile.email,
             'Request from TakeOut',
             messageContent);
-       
+
          console.log(test);userId, doc, fieldNames, modifier
       Router.go('RequestSent');
-      
+
       return false;
     },
-    
+
     'change .filename': function (event) {
       Session.set('imageURL', event.originalEvent.fpfile.url);
     }
@@ -109,7 +136,26 @@ if (Meteor.isClient) {
 	Template.ShowItems.helpers({
 		items: function () {
 			return Items.find();
-		}
+		},
+
+    itemsNearMe: function(){
+      var lng = -122.1411802;
+      var lat = 47.644823699999996;
+
+      var results = Items.find( {
+      loc:
+        { $near :
+          {
+            $geometry:{ type:"Point", coordinates:[ lng, lat]},
+            $minDistance: 0,
+            $maxDistance: 5000
+          }
+       }
+      });
+
+      return results;
+    }
+
 	});
 
   Template.MyItems.helpers({
@@ -129,13 +175,13 @@ if (Meteor.isClient) {
       Items.remove(this._id);
     }
   });
-  
+
   Template.notification.events({
     'click .delete': function(event) {
       PrivateMessages.remove(this._id);
     }
   });
-  
+
   Template.notification.events({
     'click .pickedUp': function(event) {
       Meteor.users.update({_id: this.fromID}, { $inc: { "profile.itemsPickedUp": 1} });

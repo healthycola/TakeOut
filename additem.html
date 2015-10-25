@@ -1,12 +1,12 @@
 <template name="additem">
   {{#if currentUser}}
   <h2 class="sub-header">Add Item</h2>
-  
+
   <form class="form-horizontal" id="additem">
     <div class="form-group">
       <label for="name" class="col-sm-2 control-label">Name</label>
       <div class="col-sm-10">
-        <input type="text" class="form-control" name="name" placeholder="Item Name">
+        <input type="text" class="form-control" name="name" placeholder="Item Name" required>
       </div>
     </div>
     <div class="form-group">
@@ -34,12 +34,12 @@
         <label for="scheduling" class="control-label">After</label>
         <div class="input-group datetimepicker">
           <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-          <input class="set-due-date form-control" name="schedulingAfter" type="text"/>
+          <input class="set-due-date form-control" name="schedulingAfter" type="text" required/>
         </div>
         <label for="scheduling" class="control-label">Before</label>
         <div class="input-group datetimepicker">
           <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-          <input class="set-due-date form-control" name="schedulingBefore" type="text"/>
+          <input class="set-due-date form-control" name="schedulingBefore" type="text" required/>
         </div>
       </div>
     </div>

@@ -24,3 +24,4 @@ twbs:bootstrap
 tsega:bootstrap3-datetimepicker
 email
 gfk:mailgun-api
+mdg:geolocation
