@@ -64,7 +64,7 @@ if (Meteor.isClient) {
     notifications: function () {
       if (Meteor.user()) {
         console.log("hi");
-        var res = PrivateMessages.find({ $or: [ {toID: Meteor.userId()}, {fromID: Meteor.userId() } ] });
+        var res = PrivateMessages.find({$and: [{ $or: [ {toID: Meteor.userId()}, {fromID: Meteor.userId() } ] }, {pickupComplete : false}] });
         console.log(res);
         return res;
       }
@@ -76,14 +76,16 @@ if (Meteor.isClient) {
 
   var dismissNotification = function(notification)
   {
-    console.log(notification);
-    if (notification.fromID == Meteor.userId())
+    if (notification != null)
     {
-      PrivateMessages.update({ _id: notification._id }, { $set: { notifyFromUser: false } });
-    }
-    else if (notification.toID == Meteor.userId())
-    {
-      PrivateMessages.update({ _id: notification._id }, { $set: { notifyToUser: false } });
+      if (notification.fromID == Meteor.userId())
+      {
+        PrivateMessages.update({ _id: notification._id }, { $set: { notifyFromUser: false } });
+      }
+      else if (notification.toID == Meteor.userId())
+      {
+        PrivateMessages.update({ _id: notification._id }, { $set: { notifyToUser: false } });
+      }
     }
   }
   
@@ -95,10 +97,13 @@ if (Meteor.isClient) {
 
   Template.notification.events({
     'click .pickedUp': function (event) {
-      Meteor.users.update({ _id: this.fromID }, { $inc: { "profile.itemsPickedUp": 1 } });
-      Meteor.users.update({ _id: this.toID }, { $inc: { "profile.itemsDonated": 1 } });
-      PrivateMessages.remove(this._id);
-      Items.remove(this.item);
+      if (this.toID == Meteor.userId())
+      {
+        Meteor.users.update({ _id: this.fromID }, { $inc: { "profile.itemsPickedUp": 1 } });
+        Meteor.users.update({ _id: this.toID }, { $inc: { "profile.itemsDonated": 1 } });
+        Items.update({ _id: this.item }, { $set: { pickupUserId: this.fromID } });
+        PrivateMessages.update({ _id: this._id }, { $set: { pickupComplete: true } });
+      }
     }
   });
   
@@ -114,19 +119,34 @@ if (Meteor.isClient) {
     
     fromUser: function() { 
       return Meteor.users.findOne({ _id: this.notificationThread.fromID });
+    },
+    
+    isItemStillAvailable: function()
+    {
+      console.log(this.notificationThread);
+      var val = Items.findOne({ $and: [{ _id: this.notificationThread.item }, { pickupUserId: null }] });
+      console.log(val);
+      console.log(val != null);
+      return val != null;
     }
   });
   
+  addReply = function(notification, reply)
+  {
+    if (notification.fromID == Meteor.userId())
+      {
+        PrivateMessages.update({_id: notification._id}, { $push: { replies: {message: reply, time: new Date(), fromID: Meteor.userId() } }, $set: { notifyToUser: true} });
+      }
+      else if (notification.toID == Meteor.userId())
+      {
+        PrivateMessages.update({_id: notification._id}, { $push: { replies: {message: reply, time: new Date(), fromID: Meteor.userId() } }, $set: { notifyFromUser: true} });
+      }
+  }
+  
   Template.fullNotificationThread.events({
     'submit #addReplyToNotification': function (event) {
-      if (this.notificationThread.fromID == Meteor.userId())
-      {
-        PrivateMessages.update({_id: this.notificationThread._id}, { $push: { replies: {message: event.target.message.value, time: new Date(), fromID: Meteor.userId() } }, $set: { notifyToUser: true} });
-      }
-      else if (this.notificationThread.toID == Meteor.userId())
-      {
-        PrivateMessages.update({_id: this.notificationThread._id}, { $push: { replies: {message: event.target.message.value, time: new Date(), fromID: Meteor.userId() } }, $set: { notifyFromUser: true} });
-      }
+      addReply(this.notificationThread, event.target.message.value);
+      event.target.message.value = "";
       return false;
     }
   });
@@ -175,8 +195,8 @@ Router.route('notifications/:_id', function () {
   this.layout('LayoutOne');
   
   var findResult = PrivateMessages.findOne({ _id: this.params._id });
-  
-  if (findResult.toID == Meteor.userId() || findResult.fromID == Meteor.userId())
+   
+  if ((findResult != null) && (findResult.toID == Meteor.userId() || findResult.fromID == Meteor.userId()))
   {
     this.render('fullNotificationThread', { data: {notificationThread: findResult} }); 
   }

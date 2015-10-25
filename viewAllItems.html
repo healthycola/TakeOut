@@ -57,6 +57,44 @@
     </table>
 </template>
 
+<template name="MyDonatedItems">
+	<table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Posted Date</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each items}}
+     	   {{> item}}
+      	{{/each}}
+      </tbody>
+    </table>
+</template>
+
+<template name="MyPickedUpItems">
+	<table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Posted Date</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each items}}
+     	   {{> item}}
+      	{{/each}}
+      </tbody>
+    </table>
+</template>
+
 <template name="item">
 	<tr class="itemRow">
 		<td class="itemClick table-hover">{{name}}</td>
@@ -120,6 +158,7 @@
 
 <template name="Request">
   {{> ShowSingleItem}}
+  {{#if isItemStillAvailable item._id}}
   <form class="form-horizontal" id="requestItem">
     <div class="form-group">
       <label for="name" class="col-sm-2 control-label">Message</label>
@@ -143,5 +182,8 @@
       </div>
     </div>
   </form>
+  {{else}}
+  <i>Item is already picked up!</i>
+  {{/if}}
 </template>
 

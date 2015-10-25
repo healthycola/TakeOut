@@ -36,8 +36,8 @@
 		</dl>
 	</div>
 	<div class="panel-footer">
-		<button class='dismiss'>Dismiss</button> 
-		<button class='pickedUp'>Picked Up</button> 
+		<button class='dismiss'>Dismiss Notification</button> 
+		<button class='pickedUp'>Picked Up</button>
 		<a href="/notifications/{{_id}}">Full Thread</a> 
 		<span class="badge">{{#if isCurrentUser}}Request{{else}}Your request{{/if}}</span>
 	</div>
@@ -56,7 +56,8 @@
 		{{> reply}}
 	{{/each}}
 	</div>
-		
+	
+	{{#if isItemStillAvailable }}
 	<form class="form-horizontal" id="addReplyToNotification">
     <div class="form-group">
       <label for="name" class="col-sm-2 control-label">Message</label>
@@ -70,6 +71,9 @@
       </div>
     </div>
   </form>
+  {{else}}
+  <div class="alert alert-success" role="alert">Item was picked up!</div>
+  {{/if}}
   
 	{{else}}
 	No such notification exists!

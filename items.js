@@ -62,21 +62,21 @@ if (Meteor.isClient) {
       console.log(latLng);
 
       var insertedItem = Items.insert(
-          {
-            name: event.target.name.value,
-            ageDay: event.target.ageInDays.value,
-            ageHour: event.target.ageInHours.value,
-            imageURL: event.target.imageURL.value,
-            ownerID: Meteor.userId(),
-            postedOn: new Date(),
-            pickupAfter: event.target.schedulingAfter.value,
-            pickupBefore: event.target.schedulingBefore.value,
-            loc : {
+        {
+          name: event.target.name.value,
+          ageDay: event.target.ageInDays.value,
+          ageHour: event.target.ageInHours.value,
+          imageURL: event.target.imageURL.value,
+          ownerID: Meteor.userId(),
+          postedOn: new Date(),
+          pickupAfter: event.target.schedulingAfter.value,
+          pickupBefore: event.target.schedulingBefore.value,
+          pickupUserId: null,
+          loc : {
               type: "Point",
               coordinates: [ latLng.lng, latLng.lat ]
             }
-
-          });
+        });
 
         Session.set('imageURL', '');
         Router.go('ShowItems');
@@ -118,7 +118,8 @@ if (Meteor.isClient) {
           item: this.item._id,
           replies: [],
           notifyFromUser: false,
-          notifyToUser: true
+          notifyToUser: true,
+          pickupComplete: false
         });
 
       /*
@@ -142,10 +143,18 @@ if (Meteor.isClient) {
       Session.set('imageURL', event.originalEvent.fpfile.url);
     }
   });
+  
+  Template.Request.helpers({
+    isItemStillAvailable: function(itemID)
+    {
+      console.log(itemID);
+      return Items.findOne({ $and: [{ _id: itemID }, { pickupUserId: null }]}) != null;
+    }
+  });
 
 	Template.ShowItems.helpers({
 		items: function () {
-			return Items.find();
+			return Items.find({ pickupUserId: null });
 		},
 
     itemsNearMe: function(){
@@ -171,6 +180,18 @@ if (Meteor.isClient) {
   Template.MyItems.helpers({
     items: function () {
       return Items.find({ ownerID: Meteor.userId() });
+    }
+  });
+  
+  Template.MyDonatedItems.helpers({
+    items: function () {
+      return Items.find({ $and: [{ ownerID: Meteor.userId() }, { pickupUserId: { $not: null } }] });
+    }
+  });
+  
+  Template.MyPickedUpItems.helpers({
+    items: function () {
+      return Items.find({ pickupUserId: Meteor.userId()});
     }
   });
 
@@ -214,6 +235,18 @@ Router.route('/MyItems', function () {
   this.render('MyItems');
 });
 
+Router.route('/MyDonatedItems', function () {
+  this.layout('LayoutOne');
+  // render the Home template with a custom data context
+  this.render('MyDonatedItems');
+});
+
+Router.route('/MyPickedUpItems', function () {
+  this.layout('LayoutOne');
+  // render the Home template with a custom data context
+  this.render('MyPickedUpItems');
+});
+
 Router.route('/RequestSent', function () {
   this.layout('LayoutOne');
   // render the Home template with a custom data context
@@ -248,6 +281,7 @@ Router.route('/request/:_id', function () {
   if (findResult) {
     var ownerFindResult = Meteor.users.findOne({ _id: findResult.ownerID });
     if (ownerFindResult) {
+      console.log(findResult);
       this.render('Request', { data: { item: findResult, owner: ownerFindResult } });
     }
     else {
