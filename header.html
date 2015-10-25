@@ -10,9 +10,9 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <h2>
+      <h1>
       <a class="navbar-brand" href="/">TakeOUT.</a>
-      </h2>
+      </h1>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -20,24 +20,28 @@
 
       <ul class="nav navbar-nav navbar-right">
         {{#if currentUser}}
-          <li class="nav nav-pills" role="presentation"><a href="/notifications">Notifications <span class="badge">{{notificationCount}}</span></a></li>
-          <li class="nav nav-pills" role="presentation"><a href="#">Messages <span class="badge">3</span></a></li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hi, {{currentUser.profile.firstName}}! <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li><a href="/profile">Profile</a></li>
-              <li><a href="/myItems">My Items</a></li>
-              <li role="separator" class="divider"></li>
-              <li>{{> logoutForm}}</li>
-              <li><a href="#">Contact Us</a></li>
-            </ul>
-          </li>
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Items<span class="caret"></span></a>
             <ul class="dropdown-menu">
+              <li><a href="/addItem">Add New Item</a></li>
+              <li role="separator" class="divider"></li>
               <li><a href="/ShowItems">Show All Items</a></li>
               <li role="separator" class="divider"></li>
-              <li><a href="/addItem">Add New Item</a></li>
+              <li><a href="/myItems">My donated items</a></li>
+              <li><a href="/addItem">My picked up items</a></li>
+              <li role="separator" class="divider"></li>
+              <li><a href="/pendingRequests">Pending Requests</a></li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hi, {{currentUser.profile.firstName}}!  <span class="badge">{{notificationCount}}</span><span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="/notifications">Notifications <span class="badge">{{notificationCount}}</span></a></li>
+              <li role="separator" class="divider"></li>
+              <li><a href="/profile">Profile</a></li>
+              <li role="separator" class="divider"></li>
+              <li>{{> logoutForm}}</li>
+              <li><a href="#">Contact Us</a></li>
             </ul>
           </li>
         {{else}}

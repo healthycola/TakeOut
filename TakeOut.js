@@ -11,8 +11,8 @@ if (Meteor.isClient) {
 
   Template.feed.helpers({
     posts: function () {
-        return Posts.find();
-      }
+      return Posts.find();
+    }
   });
 
   Template.hello.events({
@@ -22,8 +22,8 @@ if (Meteor.isClient) {
     }
   });
 
-Template.email.events({
-  "click #emailAdd": function(event) {
+  Template.email.events({
+    "click #emailAdd": function (event) {
       event.preventDefault();
 
       Router.go('/request/' + this._id);
@@ -32,7 +32,7 @@ Template.email.events({
   });
 
   Template.signupForm.events({
-    "submit #signup-form": function(event) {
+    "submit #signup-form": function (event) {
       event.preventDefault();
       Accounts.createUser({
         username: event.target.signupusername.value,
@@ -47,12 +47,11 @@ Template.email.events({
           itemsPickedUp: 0,
           signupDate: new Date()
         }
-      }, function(error) {
+      }, function (error) {
         if (error) {
           // Display the user creation error to the user however you want
         }
-        else
-        {
+        else {
           Router.go('/profile');
         }
 
@@ -62,36 +61,41 @@ Template.email.events({
   });
 
   Template.loginForm.events({
-    "submit #login-form": function(event) {
+    "submit #login-form": function (event) {
       event.preventDefault();
       console.log(event);
       console.log("Test - " + event.target.loginusername.value);
       Meteor.loginWithPassword(
         event.target.loginusername.value,
         event.target.loginpassword.value,
-        function(error) {
+        function (error) {
           if (error) {
             // Display the login error to the user however you want
           }
-          else
-          {
+          else {
             Router.go('/profile');
           }
         }
-      );
+        );
     }
   });
 
   Template.logoutForm.events({
-    "click .logoutLink": function(event) {
+    "click .logoutLink": function (event) {
       event.preventDefault();
-      Meteor.logout(function(error) {
+      Meteor.logout(function (error) {
         if (error) {
           // Display the logout error to the user however you want
         }
       });
     }
   });
+  
+  Template.profile.helpers({
+    isCurrentUser: function() {
+      return this.user._id == Meteor.userId();
+    }
+  })
 }
 
 if (Meteor.isServer) {
@@ -102,24 +106,24 @@ if (Meteor.isServer) {
       sendEmail: function (to, from, subject, text) {
 
         var options = {
-            apiKey: 'key-2912fabf1546af438ae9524bf8d71308',
-            domain: 'sandbox27eb015c13cb43198dc3d8526e3354b6.mailgun.org'
+          apiKey: 'key-2912fabf1546af438ae9524bf8d71308',
+          domain: 'sandbox27eb015c13cb43198dc3d8526e3354b6.mailgun.org'
         }
 
         var NigerianPrinceGun = new Mailgun(options);
         NigerianPrinceGun.send({
-         'to': to,
-         'from': from,
-         'html': '<html><head></head><body>'+text+'</body></html>',
-         'text': text,
-         'subject': subject,
-         'tags': [
-             'some',
-             'test',
-             'tags'
-         ]
-     });
-        }
+          'to': to,
+          'from': from,
+          'html': '<html><head></head><body>' + text + '</body></html>',
+          'text': text,
+          'subject': subject,
+          'tags': [
+            'some',
+            'test',
+            'tags'
+          ]
+        });
+      }
     });
   });
 }
@@ -141,7 +145,14 @@ Router.route('/signup', function () {
 Router.route('/profile', function () {
   this.layout('LayoutOne');
   // render the Home template with a custom data context
-  this.render('profile');
+  this.render('profile', {data: {user: Meteor.user() }});
+});
+
+Router.route('/users/:_id', function () {
+  this.layout('LayoutOne');
+  var findResult = Meteor.users.findOne({ _id: this.params._id });
+  // render the Home template with a custom data context
+  this.render('profile', {data: {user: findResult }});
 });
 
 Router.route('/feed', function () {

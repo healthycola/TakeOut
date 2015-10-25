@@ -1,4 +1,22 @@
+<template name="yourItemRequests">
+	{{#each notifications}}
+		{{> notification}}
+	{{/each}}
+</template>
+
+<template name="yourRequests">
+	{{#each notifications}}
+		{{> notification}}
+	{{/each}}
+</template>
+
 <template name="notifications">
+	{{#each notifications}}
+		{{> notification}}
+	{{/each}}
+</template>
+
+<template name="pendingRequests">
 	{{#each notifications}}
 		{{> notification}}
 	{{/each}}
@@ -9,13 +27,73 @@
 	<div class="panel-heading">Message</div>
 	<div class="panel-body">
 		<dl class="dl-horizontal">
+		<dt>Item</dt>
+		<dd><a href="/items/{{item._id}}">{{item.name}}</a></dd>
 		<dt>Message</dt>
 		<dd>{{message}}</dd>
 		<dt>PickupTime</dt>
 		<dd>{{pickupTimeRequested}}</dd>
 		</dl>
 	</div>
-	<div class="panel-footer"><button class='delete'>Dismiss</button>
-	<button class='pickedUp'>Picked Up</button></div>
+	<div class="panel-footer">
+		<button class='dismiss'>Dismiss</button> 
+		<button class='pickedUp'>Picked Up</button> 
+		<a href="/notifications/{{_id}}">Full Thread</a> 
+		<span class="badge">{{#if isCurrentUser}}Request{{else}}Your request{{/if}}</span>
+	</div>
+	</div>
+</template>
+
+<template name="fullNotificationThread">
+	{{#if notificationThread}}
+	<div class="panel panel-default">
+	<h2>Request for <a href="/items/{{item._id}}">{{item.name}}</a> from <i><a href="/users/{{fromUser._id}}">{{fromUser.profile.firstName}}</a></i></h2>
+	<div class="panel-body parentNotification">
+		{{notificationThread.message}}
+	</div>
+	
+	{{#each notificationThread.replies}}
+		{{> reply}}
+	{{/each}}
+	</div>
+		
+	<form class="form-horizontal" id="addReplyToNotification">
+    <div class="form-group">
+      <label for="name" class="col-sm-2 control-label">Message</label>
+      <div class="col-sm-10">
+        <textarea rows="5" class="form-control" name="message" placeholder="Hi! I want to pick up this item!"></textarea>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-default">Send Reply</button>
+      </div>
+    </div>
+  </form>
+  
+	{{else}}
+	No such notification exists!
+	{{/if}}
+</template>
+
+<template name="reply">
+	<div class="reply">
+	{{#if isCurrentUser}}
+	<div class="text-right">
+		<div class="panel-heading replyHeader">
+			<em>{{user.profile.firstName}}</em> said
+		</div>
+		<div class="panel-body myReply">
+			{{message}}
+		</div>
+	</div>
+	{{else}}
+	<div class="text-left">
+		<div class="panel-heading replyHeader"><em>{{user.profile.firstName}}</em> said</div>
+		<div class="panel-body theirReply">
+			{{message}}
+		</div>
+	</div>
+	{{/if}}
 	</div>
 </template>

@@ -1,5 +1,4 @@
 Items = new Mongo.Collection("items");
-PrivateMessages = new Mongo.Collection("pms");
 
 Meteor.users.allow({
   update: function (userId, doc, fieldNames, modifier) {
@@ -10,9 +9,9 @@ Meteor.users.allow({
 });
 
 if (Meteor.isClient) {
-	Template.additem.onRendered(function() {
-		this.$('.datetimepicker').datetimepicker();
-	});
+  Template.additem.onRendered(function () {
+    this.$('.datetimepicker').datetimepicker();
+  });
 
   Session.setDefault('imageURL', '');
 
@@ -21,6 +20,7 @@ if (Meteor.isClient) {
       return Session.get('imageURL');
     }
   });
+
 
   Template.header.helpers({
     notificationCount: function () {
@@ -108,21 +108,31 @@ if (Meteor.isClient) {
     'submit #requestItem': function(event) {
 
       var messageContent = event.target.message.value + "<br/>" + event.target.schedulingRequest.value;
-       var test = PrivateMessages.insert(
+      console.log(this);
+      var test = PrivateMessages.insert(
         {
           fromID: Meteor.userId(),
           toID: this.item.ownerID,
           message: event.target.message.value,
-          pickupTimeRequested: event.target.schedulingRequest.value
+          pickupTimeRequested: event.target.schedulingRequest.value,
+          item: this.item._id,
+          replies: [],
+          notifyFromUser: false,
+          notifyToUser: true
         });
 
+      /*
+>>>>>>> origin/master
       Meteor.call('sendEmail',
             (Meteor.users.findOne({_id : this.item.ownerID})).profile.email,
             Meteor.user().profile.email,
             'Request from TakeOut',
             messageContent);
+<<<<<<< HEAD
 
          console.log(test);userId, doc, fieldNames, modifier
+=======
+       */
       Router.go('RequestSent');
 
       return false;
@@ -159,19 +169,19 @@ if (Meteor.isClient) {
 	});
 
   Template.MyItems.helpers({
-		items: function () {
-			return Items.find({ownerID: Meteor.userId()});
-		}
-	});
+    items: function () {
+      return Items.find({ ownerID: Meteor.userId() });
+    }
+  });
 
   Template.item.events({
-    	'click .itemClick': function(event) {
-        Router.go('/items/' + this._id);
+    'click .itemClick': function (event) {
+      Router.go('/items/' + this._id);
     }
   });
 
   Template.myItem.events({
-    'click .delete': function(event) {
+    'click .delete': function (event) {
       Items.remove(this._id);
     }
   });
@@ -190,6 +200,7 @@ if (Meteor.isClient) {
     }
   });
 };
+
 
 Router.route('/ShowItems', function () {
   this.layout('LayoutOne');
@@ -211,23 +222,19 @@ Router.route('/RequestSent', function () {
 
 Router.route('/items/:_id', function () {
   this.layout('LayoutOne');
-  var findResult = Items.findOne({_id: this.params._id});
+  var findResult = Items.findOne({ _id: this.params._id });
 
-  if (findResult)
-  {
-    var ownerFindResult = Meteor.users.findOne({_id: findResult.ownerID});
-    if (ownerFindResult)
-    {
-      this.render('ShowSingleItem', {data: {item: findResult, owner: ownerFindResult}});
+  if (findResult) {
+    var ownerFindResult = Meteor.users.findOne({ _id: findResult.ownerID });
+    if (ownerFindResult) {
+      this.render('ShowSingleItem', { data: { item: findResult, owner: ownerFindResult } });
     }
-    else
-    {
-      this.render('ShowSingleItem', {data: {}});
+    else {
+      this.render('ShowSingleItem', { data: {} });
     }
   }
-  else
-  {
-    this.render('ShowSingleItem', {data: {}});
+  else {
+    this.render('ShowSingleItem', { data: {} });
   }
 });
 
@@ -236,31 +243,20 @@ Router.route('/request/:_id', function () {
   this.layout('LayoutOne');
   // render the Home template with a custom data context
 
-  var findResult = Items.findOne({_id: this.params._id});
+  var findResult = Items.findOne({ _id: this.params._id });
 
-  if (findResult)
-  {
-    var ownerFindResult = Meteor.users.findOne({_id: findResult.ownerID});
-    if (ownerFindResult)
-    {
-      this.render('Request', {data: {item: findResult, owner: ownerFindResult}});
+  if (findResult) {
+    var ownerFindResult = Meteor.users.findOne({ _id: findResult.ownerID });
+    if (ownerFindResult) {
+      this.render('Request', { data: { item: findResult, owner: ownerFindResult } });
     }
-    else
-    {
-      this.render('Request', {data: {}});
+    else {
+      this.render('Request', { data: {} });
     }
   }
-  else
-  {
-    this.render('Request', {data: {}});
+  else {
+    this.render('Request', { data: {} });
   }
-});
-
-Router.route('notifications', function () {
-  this.layout('LayoutOne');
-  // render the Home template with a custom data context
-
-  this.render('notifications');
 });
 
 

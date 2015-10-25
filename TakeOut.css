@@ -46,9 +46,13 @@ hr.colored {
     width: 200px;
 }
 
+.panel-body {
+  border-color: #ef4035;
+  border-bottom: 1px solid;
+}
+
 
 .homepage{
-
   width: 100%;
 }
 
@@ -85,7 +89,28 @@ body {
   padding-top:20px;
   padding-bottom:20px;
 }
+.parentNotification {
+  background-color: #444444;
+  color: #f3f3f3;
+}
+.myReply {
+  background-color: #444444;
+  color: #f3f3f3;
+}
 
+.theirReply {
+  background-color: #f2f2f2;
+  color: #666666;
+}
+
+.reply {
+  margin-top:10px;
+  border: 1px solid #d5d5d5;
+}
+
+.replyHeader {
+  padding-bottom: 2px !important;
+}
 
 /* Custom page CSS
 -------------------------------------------------- */
