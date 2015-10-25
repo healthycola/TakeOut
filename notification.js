@@ -4,28 +4,12 @@ if (Meteor.isClient) {
   Template.header.helpers({
     notificationCount: function () {
       if (Meteor.user()) {
-        return PrivateMessages.find({ $or: [{ toID: Meteor.userId() }, {fromID: Meteor.userId()} ] }).fetch().length;
+        return PrivateMessages.find({ $or: [{ $and: [{toID: Meteor.userId()}, {notifyToUser: true}] }, { $and: [{fromID: Meteor.userId()}, {notifyFromUser: true}] } ] }).fetch().length;
       }
       else {
         return 0;
       }
-    },
-    myItemRequestsCount: function () {
-      if (Meteor.user()) {
-        return PrivateMessages.find({ fromID: Meteor.userId() }).fetch().length;
-      }
-      else {
-        return 0;
-      }
-    },
-    myRequestsCount: function () {
-      if (Meteor.user()) {
-        return PrivateMessages.find({ toID: Meteor.userId() }).fetch().length;
-      }
-      else {
-        return 0;
-      }
-    },
+    }
   });
   
   Template.notification.helpers({
@@ -43,7 +27,7 @@ if (Meteor.isClient) {
   Template.yourItemRequests.helpers({
     notifications: function () {
       if (Meteor.user()) {
-        return PrivateMessages.find({ toID: Meteor.userId() });
+        return PrivateMessages.find({ fromID: Meteor.userId() });
       }
       else {
         return null;
@@ -54,7 +38,35 @@ if (Meteor.isClient) {
   Template.yourRequests.helpers({
     notifications: function () {
       if (Meteor.user()) {
-        return PrivateMessages.find({ fromID: Meteor.userId() });
+        return PrivateMessages.find({ toID: Meteor.userId() });
+      }
+      else {
+        return null;
+      }
+    }
+  });
+  
+  Template.notifications.helpers({
+    notifications: function () {
+      if (Meteor.user()) {
+        console.log("hi");
+        var res = PrivateMessages.find({ $or: [{ $and: [{toID: Meteor.userId()}, {notifyToUser: true}] }, { $and: [{fromID: Meteor.userId()}, {notifyFromUser: true}] } ] });
+        console.log(res);
+        return res;
+      }
+      else {
+        return null;
+      }
+    }
+  });
+  
+  Template.pendingRequests.helpers({
+    notifications: function () {
+      if (Meteor.user()) {
+        console.log("hi");
+        var res = PrivateMessages.find({ $or: [ {toID: Meteor.userId()}, {fromID: Meteor.userId() } ] });
+        console.log(res);
+        return res;
       }
       else {
         return null;
@@ -62,9 +74,22 @@ if (Meteor.isClient) {
     }
   });
 
+  var dismissNotification = function(notification)
+  {
+    console.log(notification);
+    if (notification.fromID == Meteor.userId())
+    {
+      PrivateMessages.update({ _id: notification._id }, { $set: { notifyFromUser: false } });
+    }
+    else if (notification.toID == Meteor.userId())
+    {
+      PrivateMessages.update({ _id: notification._id }, { $set: { notifyToUser: false } });
+    }
+  }
+  
   Template.notification.events({
-    'click .delete': function (event) {
-      PrivateMessages.remove(this._id);
+    'click .dismiss': function (event) {
+      dismissNotification(this);
     }
   });
 
@@ -76,6 +101,11 @@ if (Meteor.isClient) {
       Items.remove(this.item);
     }
   });
+  
+  Template.fullNotificationThread.onRendered(function () {
+    dismissNotification(this.data.notificationThread);
+  });
+  
   
   Template.fullNotificationThread.helpers({
     item: function() { 
@@ -89,7 +119,14 @@ if (Meteor.isClient) {
   
   Template.fullNotificationThread.events({
     'submit #addReplyToNotification': function (event) {
-      PrivateMessages.update({_id: this.notificationThread._id}, {$push: { replies: {message: event.target.message.value, time: new Date(), fromID: Meteor.userId() } }});
+      if (this.notificationThread.fromID == Meteor.userId())
+      {
+        PrivateMessages.update({_id: this.notificationThread._id}, { $push: { replies: {message: event.target.message.value, time: new Date(), fromID: Meteor.userId() } }, $set: { notifyToUser: true} });
+      }
+      else if (this.notificationThread.toID == Meteor.userId())
+      {
+        PrivateMessages.update({_id: this.notificationThread._id}, { $push: { replies: {message: event.target.message.value, time: new Date(), fromID: Meteor.userId() } }, $set: { notifyFromUser: true} });
+      }
       return false;
     }
   });
@@ -117,6 +154,20 @@ Router.route('yourRequests', function () {
   // render the Home template with a custom data context
 
   this.render('yourRequests');
+});
+
+Router.route('notifications', function () {
+  this.layout('LayoutOne');
+  // render the Home template with a custom data context
+
+  this.render('notifications');
+});
+
+Router.route('pendingRequests', function () {
+  this.layout('LayoutOne');
+  // render the Home template with a custom data context
+
+  this.render('pendingRequests');
 });
 
 
