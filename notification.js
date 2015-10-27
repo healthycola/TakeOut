@@ -13,7 +13,6 @@ if (Meteor.isClient) {
   });
   
   Template.registerHelper("isCountZero", function (array) {
-    console.log(array);
     if (array != null)
     {
       return array.length == 0;
@@ -166,49 +165,4 @@ if (Meteor.isClient) {
     }
   })
 }
-
-Router.route('yourItemRequests', function () {
-  this.layout('LayoutOne');
-  // render the Home template with a custom data context
-
-  this.render('yourItemRequests');
-});
-
-Router.route('yourRequests', function () {
-  this.layout('LayoutOne');
-  // render the Home template with a custom data context
-
-  this.render('yourRequests');
-});
-
-Router.route('notifications', function () {
-  this.layout('LayoutOne');
-  // render the Home template with a custom data context
-
-  this.render('notifications');
-});
-
-Router.route('pendingRequests', function () {
-  this.layout('LayoutOne');
-  // render the Home template with a custom data context
-
-  this.render('pendingRequests');
-});
-
-
-Router.route('notifications/:_id', function () {
-  this.layout('LayoutOne');
-  
-  var findResult = PrivateMessages.findOne({ _id: this.params._id });
-  
-  console.log(findResult);
-  if ((findResult != null) && (findResult.toID == Meteor.userId() || findResult.fromID == Meteor.userId()))
-  {
-    this.render('fullNotificationThread', { data: {notificationThread: findResult} }); 
-  }
-  else
-  {
-    this.render('fullNotificationThread', { data: {} });
-  }
-});
 

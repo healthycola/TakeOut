@@ -1,4 +1,4 @@
-Items = new Mongo.Collection("items");
+
 
 Meteor.users.allow({
   update: function (userId, doc, fieldNames, modifier) {
@@ -21,15 +21,12 @@ if (Meteor.isClient) {
     }
   });
 
-
   Template.header.helpers({
     notificationCount: function () {
-      if (Meteor.user())
-      {
-        return PrivateMessages.find({toID: Meteor.userId()}).fetch().length;
+      if (Meteor.user()) {
+        return PrivateMessages.find({ toID: Meteor.userId() }).fetch().length;
       }
-      else
-      {
+      else {
         return 0;
       }
     }
@@ -37,56 +34,45 @@ if (Meteor.isClient) {
 
   Template.notifications.helpers({
     notifications: function () {
-      if (Meteor.user())
-      {
-        return PrivateMessages.find({toID: Meteor.userId()});
+      if (Meteor.user()) {
+        return PrivateMessages.find({ toID: Meteor.userId() });
       }
-      else
-      {
+      else {
         return null;
       }
     }
   });
 
-  var addItem = function () {
-      var latLng = Geolocation.latLng();
+  var addItem = function (event) {
+    var latLng = Geolocation.latLng();
 
-      if (! latLng) {
-        latLng = {};
-        latLng.lng  = 0;
-        latLng.lat = 0;
-      }
+    if (!latLng) {
+      latLng = {};
+      latLng.lng = 0;
+      latLng.lat = 0;
+    }
 
-      Session.set("device-lat", latLng.lat);
-      Session.set("device-lng", latLng.lng);
+    Session.set("device-lat", latLng.lat);
+    Session.set("device-lng", latLng.lng);
 
-      console.log(latLng);
+    addNewItem(
+      event.target.name.value,
+      event.target.ageInDays.value,
+      event.target.ageInHours.value,
+      event.target.imageURL.value,
+      Meteor.userId(),
+      event.target.schedulingAfter.value,
+      event.target.schedulingBefore.value,
+      latLng);
 
-      var insertedItem = Items.insert(
-        {
-          name: event.target.name.value,
-          ageDay: event.target.ageInDays.value,
-          ageHour: event.target.ageInHours.value,
-          imageURL: event.target.imageURL.value,
-          ownerID: Meteor.userId(),
-          postedOn: new Date(),
-          pickupAfter: event.target.schedulingAfter.value,
-          pickupBefore: event.target.schedulingBefore.value,
-          pickupUserId: null,
-          loc : {
-              type: "Point",
-              coordinates: [ latLng.lng, latLng.lat ]
-            }
-        });
-
-        Session.set('imageURL', '');
-        Router.go('ShowItems');
+    Session.set('imageURL', '');
+    Router.go('ShowItems');
   };
 
   Template.additem.events({
-    'submit #additem': function(event) {
-    addItem();
-    return false;
+    'submit #additem': function (event) {
+      addItem(event);
+      return false;
     },
 
     'change .filename': function (event) {
@@ -101,12 +87,12 @@ if (Meteor.isClient) {
     });
   };
 
-  Template.Request.onRendered(function() {
+  Template.Request.onRendered(function () {
     onRequestRendered(this.data.item);
   });
 
   Template.Request.events({
-    'submit #requestItem': function(event) {
+    'submit #requestItem': function (event) {
 
       var messageContent = event.target.message.value + "<br/>" + event.target.schedulingRequest.value;
       console.log(this);
@@ -144,55 +130,39 @@ if (Meteor.isClient) {
       Session.set('imageURL', event.originalEvent.fpfile.url);
     }
   });
-  
+
   Template.Request.helpers({
-    isItemStillAvailable: function(itemID)
-    {
-      console.log(itemID);
-      return Items.findOne({ $and: [{ _id: itemID }, { pickupUserId: null }]}) != null;
+    isItemStillAvailable: function (itemID) {
+      return isAvailable(itemID);
     }
   });
 
-	Template.ShowItems.helpers({
-		items: function () {
-			return Items.find({ pickupUserId: null });
-		},
+  Template.ShowItems.helpers({
+    items: function () {
+      return getAllAvailableItems();
+    },
 
-    itemsNearMe: function(){
-      var lng = -122.1411802;
-      var lat = 47.644823699999996;
-
-      var results = Items.find( {
-      loc:
-        { $near :
-          {
-            $geometry:{ type:"Point", coordinates:[ lng, lat]},
-            $minDistance: 0,
-            $maxDistance: 5000
-          }
-       }
-      });
-
-      return results;
+    itemsNearMe: function () {
+      return getAllItemsNearMe({ lat: 47.644823699999996, lng: -122.1411802 });
     }
 
-	});
+  });
 
   Template.MyItems.helpers({
     items: function () {
-      return Items.find({ ownerID: Meteor.userId() });
+      return getAllItemsForAUser(Meteor.userId());
     }
   });
-  
+
   Template.MyDonatedItems.helpers({
     items: function () {
-      return Items.find({ $and: [{ ownerID: Meteor.userId() }, { pickupUserId: { $not: null } }] });
+      return getAllDonatedItemsForAUser(Meteor.userId());
     }
   });
-  
+
   Template.MyPickedUpItems.helpers({
     items: function () {
-      return Items.find({ pickupUserId: Meteor.userId()});
+      getAllPickedUpItemsForAUser(Meteor.userId());
     }
   });
 
@@ -204,85 +174,7 @@ if (Meteor.isClient) {
 
   Template.myItem.events({
     'click .delete': function (event) {
-      Items.remove(this._id);
+      deleteItem(this._id);
     }
   });
 };
-
-
-Router.route('/ShowItems', function () {
-  this.layout('LayoutOne');
-  // render the Home template with a custom data context
-  this.render('ShowItems');
-});
-
-Router.route('/MyItems', function () {
-  this.layout('LayoutOne');
-  // render the Home template with a custom data context
-  this.render('MyItems');
-});
-
-Router.route('/MyDonatedItems', function () {
-  this.layout('LayoutOne');
-  // render the Home template with a custom data context
-  this.render('MyDonatedItems');
-});
-
-Router.route('/MyPickedUpItems', function () {
-  this.layout('LayoutOne');
-  // render the Home template with a custom data context
-  this.render('MyPickedUpItems');
-});
-
-Router.route('/RequestSent', function () {
-  this.layout('LayoutOne');
-  // render the Home template with a custom data context
-  this.render('RequestSent');
-});
-
-Router.route('/items/:_id', function () {
-  this.layout('LayoutOne');
-  var findResult = Items.findOne({ _id: this.params._id });
-
-  if (findResult) {
-    var ownerFindResult = Meteor.users.findOne({ _id: findResult.ownerID });
-    if (ownerFindResult) {
-      this.render('ShowSingleItem', { data: { item: findResult, owner: ownerFindResult } });
-    }
-    else {
-      this.render('ShowSingleItem', { data: {} });
-    }
-  }
-  else {
-    this.render('ShowSingleItem', { data: {} });
-  }
-});
-
-
-Router.route('/request/:_id', function () {
-  this.layout('LayoutOne');
-  // render the Home template with a custom data context
-
-  var findResult = Items.findOne({ _id: this.params._id });
-
-  if (findResult) {
-    var ownerFindResult = Meteor.users.findOne({ _id: findResult.ownerID });
-    if (ownerFindResult) {
-      console.log(findResult);
-      this.render('Request', { data: { item: findResult, owner: ownerFindResult } });
-    }
-    else {
-      this.render('Request', { data: {} });
-    }
-  }
-  else {
-    this.render('Request', { data: {} });
-  }
-});
-
-
-
-// Router.route('/items/:_id', function () {
-//   var item = Items.findOne({_id: this.params._id});
-//   this.render('ShowItem', {data: item});
-// });
