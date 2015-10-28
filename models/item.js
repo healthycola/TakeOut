@@ -17,7 +17,22 @@ addNewItem = function (
   _pickupBefore,
   _latLng) {
   // Do some checks before adding
-    
+
+  files = document.getElementById('fileUpload');
+  file = files.files[0]
+
+   AzureFile.upload(file,"uploadFile",{/*Pass some Parameters here */},function(err,success)
+   {
+                                  if (err){
+                                          throw err
+                                        }
+                                  else{
+                                    console.log("YAAAA");
+                                  }
+                                      //file upload was succesful
+   });
+
+
   Items.insert(
     {
       name: _name,
