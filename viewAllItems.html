@@ -100,7 +100,11 @@
 		<td class="itemClick table-hover">{{name}}</td>
 		<td class="itemClick table-hover">{{ageDay}} days {{ageHour}} hours</td>
 		<td class="itemClick table-hover">{{postedOn}}</td>
-    <td class="itemClick table-hover"><img src={{imageURL}}></td>
+    <td class="itemClick table-hover">
+      {{#each imageURL}}
+        <img src={{this}} class="img-thumbnail" alt="Thumbnail Image" width="25%">
+      {{/each}}
+    </td>
     <td>{{> email}}</td>
   </tr>
 
@@ -147,7 +151,11 @@
         <dt>Pickup before:</dt>
         <dd>{{item.pickupBefore}}</dd>
         <dt>Image</dt>
-        <dd><img src={{item.imageURL}}></dd>
+        <dd>
+          {{#each item.imageURL}}
+          <img src={{this}} class="img-thumbnail" alt="Thumbnail Image" width="25%">
+          {{/each}}
+        </dd>
 		</dl>
 	</div>
 	</div>

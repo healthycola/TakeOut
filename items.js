@@ -14,10 +14,21 @@ if (Meteor.isClient) {
   });
 
   Session.setDefault('imageURL', '');
+  var imageUrlsSoFar = [];
 
   Template.additem.helpers({
     imageURL: function () {
       return Session.get('imageURL');
+    },
+    imageUploadProgress: function () {
+      if (Session.get('fileProgress')){
+        return Session.get('fileProgress');
+      }
+
+      return 0;
+    },
+    getUploaded: function () {
+      return Session.get('uploadedImageUrls'); 
     }
   });
 
@@ -55,11 +66,15 @@ if (Meteor.isClient) {
     Session.set("device-lat", latLng.lat);
     Session.set("device-lng", latLng.lng);
 
+    if(!Session.get('uploadedImageUrls')){
+      Session.set('uploadedImageUrls', '');
+    }
+
     addNewItem(
       event.target.name.value,
       event.target.ageInDays.value,
       event.target.ageInHours.value,
-      event.target.imageURL.value,
+      Session.get('uploadedImageUrls'),
       Meteor.userId(),
       event.target.schedulingAfter.value,
       event.target.schedulingBefore.value,
@@ -70,6 +85,8 @@ if (Meteor.isClient) {
   };
 
   Template.additem.events({
+ 
+
     'submit #additem': function (event) {
       addItem(event);
       return false;
@@ -77,6 +94,72 @@ if (Meteor.isClient) {
 
     'change .filename': function (event) {
       Session.set('imageURL', event.originalEvent.fpfile.url);
+    },
+
+    'change #fileUpload': function (event){
+
+      function guid() {
+        function s4() {
+          return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+        }
+        return s4() + s4() + '-' + s4();
+      }
+
+      var filesInput = document.getElementById('fileUpload');
+      var files = filesInput.files;
+      var i = 0;
+      var len = files.length;
+      var guid = guid();
+      var uploadedSoFar = 0;
+      var filesNotUploaded = 0;
+      console.log(imageUrlsSoFar);
+      
+
+      for (; i < len; i++) {
+
+
+        $("#imagesStillLoading").show();
+        $("#addItemSubmitButton").prop("disabled", true);
+        console.log("Filename: " + files[i].name);
+        console.log("Type: " + files[i].type);
+        console.log("Size: " + files[i].size + " bytes");
+        console.log(guid);
+
+        var options = {};
+        options.params = [{name: guid + files[i].name}];
+        AzureFile.upload(files[i],"uploadFile",options,function(err,success)
+        {
+          if (err){
+            filesNotUploaded++;
+            if((uploadedSoFar+filesNotUploaded) == len){
+              console.log("done all uploads");
+              $("#imagesStillLoading").hide();
+              $("#addItemSubmitButton").prop("disabled", false);
+            }
+
+            throw err
+          }
+          else{
+            //file upload was succesful
+            uploadedSoFar++;
+            console.log(success);
+            console.log(len);
+            imageUrlsSoFar.push("https://lendimgstorage.blob.core.windows.net/takeoutblobimage/"+guid+success.name);
+            console.log(imageUrlsSoFar);
+            console.log(uploadedSoFar);
+            Session.set('uploadedImageUrls', imageUrlsSoFar)
+            if((uploadedSoFar+filesNotUploaded) == len){
+              console.log("done all uploads");
+              $("#imagesStillLoading").hide();
+              $("#addItemSubmitButton").prop("disabled", false);
+             
+            }
+
+          }                       
+        });
+      }
     }
   });
 

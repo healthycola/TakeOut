@@ -17,21 +17,17 @@ addNewItem = function (
   _pickupBefore,
   _latLng) {
   // Do some checks before adding
+ 
+ /*   
 
-  files = document.getElementById('fileUpload');
-  file = files.files[0]
-
-   AzureFile.upload(file,"uploadFile",{/*Pass some Parameters here */},function(err,success)
-   {
-                                  if (err){
-                                          throw err
-                                        }
-                                  else{
-                                    console.log("YAAAA");
-                                  }
-                                      //file upload was succesful
-   });
-
+    Meteor.call('deleteFile', "hahah", function(err,response) {
+      if(err) {
+        console.log("errr");
+        return;
+      }
+      console.log("good");
+    });
+*/
 
   Items.insert(
     {
@@ -50,6 +46,8 @@ addNewItem = function (
       }
     });
 }
+
+
 
 isAvailable = function (_itemID) {
   return Items.findOne({ $and: [{ _id: itemID }, { pickupUserId: null }]}) != null;
