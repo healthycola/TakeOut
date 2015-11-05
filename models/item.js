@@ -18,8 +18,7 @@ addNewItem = function (
   _latLng) {
   // Do some checks before adding
  
- /*   
-
+ /*
     Meteor.call('deleteFile', "hahah", function(err,response) {
       if(err) {
         console.log("errr");
@@ -27,14 +26,14 @@ addNewItem = function (
       }
       console.log("good");
     });
-*/
+  */
 
   Items.insert(
     {
       name: _name,
       ageDay: _ageDay,
       ageHour: _ageHour,
-      imageURL: _imageURL,
+      imageURLs: _imageURLs,
       ownerID: _ownerID,
       postedOn: new Date(),
       pickupAfter: _pickupAfter,
@@ -47,10 +46,8 @@ addNewItem = function (
     });
 }
 
-
-
 isAvailable = function (_itemID) {
-  return Items.findOne({ $and: [{ _id: itemID }, { pickupUserId: null }]}) != null;
+  return Items.findOne({ $and: [{ _id: _itemID }, { pickupUserId: null }]}) != null;
 }
 
 getAllAvailableItems = function () {
@@ -88,4 +85,8 @@ getAllPickedUpItemsForAUser = function(_userID) {
 
 deleteItem = function(_itemID) {
   Items.remove(_itemID);
+}
+
+updateItemPickup = function(_itemId, _userIdWhoPickedUp) {
+  Items.update({ _id: _itemId }, { $set: { pickupUserId: _userIdWhoPickedUp } });
 }

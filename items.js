@@ -118,8 +118,6 @@ if (Meteor.isClient) {
       
 
       for (; i < len; i++) {
-
-
         $("#imagesStillLoading").show();
         $("#addItemSubmitButton").prop("disabled", true);
         console.log("Filename: " + files[i].name);
@@ -154,9 +152,7 @@ if (Meteor.isClient) {
               console.log("done all uploads");
               $("#imagesStillLoading").hide();
               $("#addItemSubmitButton").prop("disabled", false);
-             
             }
-
           }                       
         });
       }
